@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { servicesAPI } from '../../services/api';
-import useNotification from '../../hooks/useNotification';
+import { useNotification } from '../../hooks/useNotification';
 import LoadingSpinner from '../../components/shared/LoadingSpinner';
 
 export default function AdminServicesPage() {
@@ -51,10 +51,10 @@ export default function AdminServicesPage() {
   };
 
   const handleDelete = async (serviceId) => {
-    if (!window.confirm('Are you sure?')) return;
+    if (!window.confirm('Are you certain you want to delete this service? This may affect historical data.')) return;
     try {
       await servicesAPI.delete(serviceId);
-      addNotification('Service deleted', 'success');
+      addNotification('Service has been permanently deleted', 'success');
       fetchServices();
     } catch (error) {
       addNotification('Failed to delete service', 'error');
@@ -64,80 +64,142 @@ export default function AdminServicesPage() {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Manage Services</h1>
+    <div className="fade-in-up pb-12 max-w-7xl mx-auto">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4 border-b border-white/5 pb-6">
+        <div>
+           <h1 className="text-3xl md:text-4xl font-bold font-['Outfit'] mb-2">Service <span className="gradient-text">Catalog</span></h1>
+           <p className="text-gray-400">Manage {services.length} active offerings in the marketplace</p>
+        </div>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          className={`btn-primary shadow-[0_0_20px_rgba(79,142,247,0.3)] ${showForm ? '!bg-gradient-to-r !from-gray-600 !to-gray-700 !shadow-none' : ''}`}
         >
-          {showForm ? 'Cancel' : 'Add Service'}
+          {showForm ? 'Cancel Creation' : '➕ Add New Service'}
         </button>
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow mb-8 space-y-4">
-          <input
-            type="text"
-            name="name"
-            placeholder="Service Name"
-            value={form.name}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <textarea
-            name="description"
-            placeholder="Description"
-            value={form.description}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 h-20 resize-none"
-          ></textarea>
-          <input
-            type="number"
-            name="price"
-            placeholder="Price"
-            value={form.price}
-            onChange={handleChange}
-            required
-            step="0.01"
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <input
-            type="url"
-            name="image_url"
-            placeholder="Image URL"
-            value={form.image_url}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button
-            type="submit"
-            className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-bold"
-          >
-            Create Service
-          </button>
-        </form>
+        <div className="mb-12 relative">
+          <div className="absolute inset-0 bg-blue-500/10 blur-xl rounded-2xl -z-10"></div>
+          <form onSubmit={handleSubmit} className="glass-card p-8 border border-blue-500/30">
+            <h3 className="text-xl font-bold mb-6 font-['Outfit'] flex items-center gap-2 text-blue-400">
+               <span className="p-1.5 bg-blue-500/20 rounded text-blue-300 border border-blue-500/30 text-sm">✨</span>
+               Create New Offering
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+               <div className="space-y-1">
+                 <label className="form-label text-blue-200">Service Name</label>
+                 <input
+                   type="text"
+                   name="name"
+                   placeholder="e.g. VIP Consultation"
+                   value={form.name}
+                   onChange={handleChange}
+                   required
+                   className="form-input bg-black/40 focus:bg-[rgba(79,142,247,0.05)]"
+                 />
+               </div>
+               
+               <div className="space-y-1">
+                 <label className="form-label text-blue-200">Price (USD)</label>
+                 <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">$</span>
+                    <input
+                      type="number"
+                      name="price"
+                      placeholder="99.99"
+                      value={form.price}
+                      onChange={handleChange}
+                      required
+                      step="0.01"
+                      className="form-input bg-black/40 pl-8 focus:bg-[rgba(79,142,247,0.05)]"
+                    />
+                 </div>
+               </div>
+            </div>
+
+            <div className="space-y-1 mb-6">
+              <label className="form-label text-blue-200">Cover Image URL (Optional)</label>
+              <div className="relative">
+                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">🔗</span>
+                 <input
+                   type="url"
+                   name="image_url"
+                   placeholder="https://example.com/image.jpg"
+                   value={form.image_url}
+                   onChange={handleChange}
+                   className="form-input bg-black/40 pl-10 focus:bg-[rgba(79,142,247,0.05)]"
+                 />
+              </div>
+            </div>
+
+            <div className="space-y-1 mb-6">
+               <label className="form-label text-blue-200">Full Description</label>
+               <textarea
+                 name="description"
+                 placeholder="Describe the premium value this service provides..."
+                 value={form.description}
+                 onChange={handleChange}
+                 required
+                 className="form-input bg-black/40 h-28 resize-none focus:bg-[rgba(79,142,247,0.05)]"
+               ></textarea>
+            </div>
+
+            <div className="flex justify-end pt-4 border-t border-white/10">
+               <button
+                 type="submit"
+                 className="btn-success shadow-[0_0_20px_rgba(34,197,94,0.3)] bg-green-500/20 text-green-400 hover:bg-green-500/30 px-8 py-3 w-full md:w-auto"
+               >
+                 Publish Service Catalog
+               </button>
+            </div>
+          </form>
+        </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {services.map((service) => (
-          <div key={service.id} className="bg-white p-6 rounded-lg shadow">
-            {service.image_url && (
-              <img src={service.image_url} alt={service.name} className="w-full h-40 object-cover rounded-lg mb-4" />
-            )}
-            <h3 className="text-xl font-bold mb-2">{service.name}</h3>
-            <p className="text-gray-600 mb-4 line-clamp-2">{service.description}</p>
-            <p className="text-2xl font-bold mb-4">${service.price}</p>
-            <button
-              onClick={() => handleDelete(service.id)}
-              className="w-full px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-            >
-              Delete
-            </button>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {services.map((service, index) => (
+          <div key={service.id} className="glass-card flex flex-col h-full group overflow-hidden" style={{ animationDelay: `${index * 0.1}s` }}>
+            <div className="relative h-48 overflow-hidden bg-black/40">
+              {service.image_url ? (
+                 <>
+                   <img src={service.image_url} alt={service.name} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-500 group-hover:scale-110" />
+                   <div className="absolute inset-0 bg-gradient-to-t from-[rgba(15,22,35,1)] to-transparent opacity-90"></div>
+                 </>
+              ) : (
+                 <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-900/30 to-purple-900/30 border-b border-white/5">
+                    <span className="text-4xl opacity-10">📦</span>
+                 </div>
+              )}
+              
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-sm z-20">
+                 <button
+                   onClick={() => handleDelete(service.id)}
+                   className="btn-danger flex flex-col items-center gap-2 transform translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 px-6 py-4 shadow-xl border-red-500/40 bg-red-900/80 hover:bg-red-800"
+                 >
+                   <span className="text-xl">🗑️</span>
+                   <span className="text-xs font-bold tracking-wider uppercase">Delete Item</span>
+                 </button>
+              </div>
+            </div>
+            
+            <div className="p-6 flex flex-col flex-1 relative z-10 -mt-10">
+              <div className="self-end bg-gradient-to-r from-blue-500 to-purple-600 text-white font-black font-['Outfit'] px-4 py-2 rounded-xl shadow-[0_8px_20px_rgba(79,142,247,0.3)] border border-white/20 mb-4 z-10 text-xl transform group-hover:-translate-y-1 transition-transform">
+                 <span className="text-sm mr-1.5 opacity-80">$</span>{service.price}
+              </div>
+              <h3 className="text-xl font-bold mb-2 font-['Outfit'] leading-tight">{service.name}</h3>
+              <p className="text-gray-400 text-sm leading-relaxed line-clamp-3">
+                 {service.description}
+              </p>
+            </div>
           </div>
         ))}
+        {services.length === 0 && !showForm && (
+           <div className="col-span-full py-16 text-center text-gray-500">
+              No services found. Click Add New Service to begin building your catalog.
+           </div>
+        )}
       </div>
     </div>
   );

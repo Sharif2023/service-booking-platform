@@ -5,7 +5,7 @@ class User {
   static async create(email, password, full_name, phone) {
     const hashedPassword = await bcrypt.hash(password, 10);
     const result = await pool.query(
-      'INSERT INTO users (email, password_hash, full_name, phone) VALUES ($1, $2, $3, $4) RETURNING id, email, full_name, phone, created_at',
+      'INSERT INTO users (email, password_hash, full_name, phone) VALUES ($1, $2, $3, $4) RETURNING id, email, full_name, phone, role, created_at',
       [email, hashedPassword, full_name, phone]
     );
     return result.rows[0];
@@ -17,7 +17,7 @@ class User {
   }
 
   static async findById(id) {
-    const result = await pool.query('SELECT id, email, full_name, phone, created_at FROM users WHERE id = $1', [id]);
+    const result = await pool.query('SELECT id, email, full_name, phone, role, created_at FROM users WHERE id = $1', [id]);
     return result.rows[0];
   }
 
