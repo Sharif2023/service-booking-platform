@@ -59,7 +59,7 @@ router.post('/create-session', authMiddleware, [
     });
 
     // Save Stripe session ID
-    await Booking.updateStripeSession(booking.id, session.id);
+    await Booking.updateStripeSession(booking.id, session.id, null);
 
     res.json({ sessionId: session.id, clientSecret: session.client_secret });
   } catch (err) {
@@ -86,7 +86,7 @@ router.patch('/:id/cancel', authMiddleware, async (req, res) => {
       return res.status(403).json({ error: 'Unauthorized' });
     }
 
-    if (booking.status === 'confirmed') {
+    if (booking.status === 'confirmed' || booking.status === 'pending') {
       const updatedBooking = await Booking.updateStatus(req.params.id, 'cancelled');
       res.json(updatedBooking);
     } else {

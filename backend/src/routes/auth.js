@@ -26,7 +26,7 @@ router.post('/register', [
     }
 
     const user = await User.create(email, password, full_name, phone);
-    const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
 
     res.status(201).json({ user, token });
   } catch (err) {
@@ -52,8 +52,8 @@ router.post('/login', [
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
-    const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
-    res.json({ user: { id: user.id, email: user.email, full_name: user.full_name, phone: user.phone }, token });
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
+    res.json({ user: { id: user.id, email: user.email, full_name: user.full_name, phone: user.phone, role: user.role }, token });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

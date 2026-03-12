@@ -27,7 +27,7 @@ const seedDatabase = async () => {
         price: 99.99,
         duration_minutes: 120,
         category: 'Cleaning',
-        image_url: 'https://images.unsplash.com/photo-1584622181563-430f63602d4b?w=500',
+        image_url: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
       },
       {
         name: 'Electrical Repair',
@@ -35,7 +35,7 @@ const seedDatabase = async () => {
         price: 149.99,
         duration_minutes: 60,
         category: 'Repair',
-        image_url: 'https://images.unsplash.com/photo-1581577143566-ae8a0e4ce6ba?w=500',
+        image_url: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
       },
       {
         name: 'Plumbing Service',
@@ -43,7 +43,7 @@ const seedDatabase = async () => {
         price: 129.99,
         duration_minutes: 90,
         category: 'Repair',
-        image_url: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=500',
+        image_url: 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
       },
       {
         name: 'Car Detailing',
@@ -51,7 +51,7 @@ const seedDatabase = async () => {
         price: 179.99,
         duration_minutes: 150,
         category: 'Automotive',
-        image_url: 'https://images.unsplash.com/photo-1601584942197-04bbb2b033d7?w=500',
+        image_url: 'https://images.unsplash.com/photo-1601362840469-51e4d8d58785?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
       },
       {
         name: 'Painting Service',
@@ -59,7 +59,7 @@ const seedDatabase = async () => {
         price: 199.99,
         duration_minutes: 240,
         category: 'Renovation',
-        image_url: 'https://images.unsplash.com/photo-1589939705066-5470d902c8c0?w=500',
+        image_url: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
       },
       {
         name: 'Lawn Care',
@@ -67,7 +67,7 @@ const seedDatabase = async () => {
         price: 89.99,
         duration_minutes: 60,
         category: 'Gardening',
-        image_url: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500',
+        image_url: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
       },
       {
         name: 'HVAC Maintenance',
@@ -75,7 +75,7 @@ const seedDatabase = async () => {
         price: 159.99,
         duration_minutes: 120,
         category: 'Repair',
-        image_url: 'https://images.unsplash.com/photo-1580632747212-446353693236?w=500',
+        image_url: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
       },
       {
         name: 'Pet Grooming',
@@ -83,7 +83,7 @@ const seedDatabase = async () => {
         price: 99.99,
         duration_minutes: 90,
         category: 'Pet Care',
-        image_url: 'https://images.unsplash.com/photo-1576201665529-2a63b1e02e98?w=500',
+        image_url: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
       },
     ];
 

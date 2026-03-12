@@ -5,11 +5,12 @@ require('dotenv').config();
 const app = express();
 
 // Middleware
-app.use(cors());
-app.use(express.json());
+app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:5173', credentials: true }));
 
-// Webhook route (must be before express.json() for raw body)
+// Webhook route MUST come before express.json() so raw body is preserved for Stripe signature verification
 app.use('/api/webhooks', require('./src/routes/webhook'));
+
+app.use(express.json());
 
 // Routes
 app.use('/api/auth', require('./src/routes/auth'));

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authAPI } from '../../services/api';
 import { useAuth } from '../../hooks/useAuth';
-import useNotification from '../../hooks/useNotification';
+import { useNotification } from '../../hooks/useNotification';
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
@@ -33,7 +33,7 @@ export default function RegisterPage() {
       );
       const { user, token } = response.data;
       login(user, token);
-      addNotification('Registration successful!', 'success');
+      addNotification('Account created successfully!', 'success');
       navigate('/');
     } catch (error) {
       addNotification(error.response?.data?.message || 'Registration failed', 'error');
@@ -43,59 +43,116 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow">
-      <h2 className="text-2xl font-bold mb-6">Register</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          name="full_name"
-          placeholder="Full Name"
-          value={form.full_name}
-          onChange={handleChange}
-          required
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-          required
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <input
-          type="tel"
-          name="phone"
-          placeholder="Phone Number"
-          value={form.phone}
-          onChange={handleChange}
-          required
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-          required
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
-        >
-          {loading ? 'Registering...' : 'Register'}
-        </button>
-      </form>
-      <p className="mt-4 text-center text-gray-600">
-        Already have an account?{' '}
-        <Link to="/login" className="text-blue-600 hover:underline">
-          Login
-        </Link>
-      </p>
+    <div className="min-h-[85vh] flex items-center justify-center relative fade-in-up py-12 px-4">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-green-500/10 to-blue-600/10 blur-[120px] rounded-full pointer-events-none"></div>
+
+      <div className="glass-card w-full max-w-[500px] p-8 md:p-10 relative overflow-hidden border-t-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+        
+        <div className="text-center mb-10 relative z-10">
+           <h2 className="text-3xl font-bold font-['Outfit'] mb-2">Create <span className="gradient-text text-green-400">Account</span></h2>
+           <p className="text-gray-400 text-sm">Join the premier network for professional services</p>
+        </div>
+        
+        <form onSubmit={handleSubmit} className="space-y-5 relative z-10">
+          <div className="grid grid-cols-1 gap-5">
+             <div className="space-y-1">
+                <label className="form-label text-gray-300">Full Legal Name</label>
+                <div className="relative group">
+                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-blue-400 transition-colors">👤</span>
+                   <input
+                     type="text"
+                     name="full_name"
+                     placeholder="John Doe"
+                     value={form.full_name}
+                     onChange={handleChange}
+                     required
+                     className="form-input bg-black/40 pl-12 focus:bg-[rgba(79,142,247,0.05)] border-white/5 focus:border-blue-500/50"
+                     autoComplete="name"
+                   />
+                </div>
+             </div>
+
+             <div className="space-y-1">
+                <label className="form-label text-gray-300">Email Address</label>
+                <div className="relative group">
+                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-blue-400 transition-colors">✉️</span>
+                   <input
+                     type="email"
+                     name="email"
+                     placeholder="name@example.com"
+                     value={form.email}
+                     onChange={handleChange}
+                     required
+                     className="form-input bg-black/40 pl-12 focus:bg-[rgba(79,142,247,0.05)] border-white/5 focus:border-blue-500/50"
+                     autoComplete="email"
+                   />
+                </div>
+             </div>
+             
+             <div className="space-y-1">
+                <label className="form-label text-gray-300">Phone Number</label>
+                <div className="relative group">
+                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-blue-400 transition-colors">📱</span>
+                   <input
+                     type="tel"
+                     name="phone"
+                     placeholder="+1 (555) 000-0000"
+                     value={form.phone}
+                     onChange={handleChange}
+                     required
+                     className="form-input bg-black/40 pl-12 focus:bg-[rgba(79,142,247,0.05)] border-white/5 focus:border-blue-500/50"
+                     autoComplete="tel"
+                   />
+                </div>
+             </div>
+
+             <div className="space-y-1">
+                <label className="form-label text-gray-300">Secure Password</label>
+                <div className="relative group">
+                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-blue-400 transition-colors">🔒</span>
+                   <input
+                     type="password"
+                     name="password"
+                     placeholder="••••••••"
+                     value={form.password}
+                     onChange={handleChange}
+                     required
+                     className="form-input bg-black/40 pl-12 focus:bg-[rgba(79,142,247,0.05)] border-white/5 focus:border-blue-500/50 tracking-widest"
+                     autoComplete="new-password"
+                   />
+                </div>
+             </div>
+          </div>
+          
+          <div className="text-xs text-gray-500 mt-4 mb-6 leading-relaxed">
+             By creating an account, you agree to our Terms of Service and Privacy Policy. Your data is encrypted and securely stored.
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn-primary w-full py-3.5 text-base shadow-[0_0_20px_rgba(79,142,247,0.4)] bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-500 hover:to-green-400"
+          >
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                 <span className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin"></span>
+                 Setting up workspace...
+              </span>
+            ) : (
+              'Create My Account'
+            )}
+          </button>
+        </form>
+        
+        <div className="mt-8 text-center border-t border-white/5 pt-6 relative z-10">
+          <p className="text-gray-400 text-sm">
+            Already have an account?{' '}
+            <Link to="/login" className="text-blue-400 font-semibold hover:text-blue-300 transition-colors">
+              Sign in instead
+            </Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
