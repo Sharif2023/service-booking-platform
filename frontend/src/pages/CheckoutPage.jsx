@@ -6,6 +6,7 @@ import { bookingsAPI } from '../services/api';
 import { useBooking } from '../hooks/useBooking';
 import { useNotification } from '../hooks/useNotification';
 import LoadingSpinner from '../components/shared/LoadingSpinner';
+import { Lock } from 'lucide-react';
 import { STRIPE_PUBLIC_KEY } from '../config/constants';
 
 const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
@@ -88,7 +89,7 @@ export default function CheckoutPage() {
       <div className="text-center mb-10">
          <h1 className="text-3xl md:text-5xl font-bold mb-4 font-['Outfit']">Secure <span className="gradient-text">Checkout</span></h1>
          <p className="text-gray-400 max-w-xl mx-auto flex items-center justify-center gap-2">
-            <span className="text-green-400 text-lg">🔒</span> Payments processed securely via Stripe encryption
+            <Lock className="text-green-400 w-5 h-5 inline-block mr-1" /> Payments processed securely via Stripe encryption
          </p>
       </div>
       

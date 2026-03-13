@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useBooking } from '../hooks/useBooking';
 import Confetti from 'react-confetti';
+import { Mail } from 'lucide-react';
 
 export default function BookingSuccessPage() {
   const { bookingData: booking, clearBooking } = useBooking();
@@ -69,7 +70,7 @@ export default function BookingSuccessPage() {
           </p>
           
           <div className="bg-black/20 border border-white/5 rounded-xl p-4 mb-10 text-sm text-gray-400 flex items-start text-left gap-4">
-             <span className="text-xl">📧</span>
+             <Mail className="w-6 h-6 text-blue-400 flex-shrink-0 mt-0.5" />
              <p>A detailed confirmation and receipt has been sent to your registered email address along with instructions.</p>
           </div>
           

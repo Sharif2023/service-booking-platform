@@ -3,6 +3,7 @@ import { bookingsAPI } from '../services/api';
 import { useNotification } from '../hooks/useNotification';
 import LoadingSpinner from '../components/shared/LoadingSpinner';
 import { Link } from 'react-router-dom';
+import { Calendar, Clock } from 'lucide-react';
 
 export default function MyBookingsPage() {
   const [bookings, setBookings] = useState([]);
@@ -56,7 +57,7 @@ export default function MyBookingsPage() {
       {bookings.length === 0 ? (
         <div className="glass-card flex flex-col items-center justify-center p-16 text-center">
           <div className="w-24 h-24 rounded-full bg-white/5 flex items-center justify-center mb-6 border border-white/10">
-             <span className="text-4xl opacity-50">📅</span>
+             <Calendar className="w-12 h-12 text-gray-500 opacity-50" />
           </div>
           <h2 className="text-2xl font-bold mb-3 font-['Outfit']">No Bookings Yet</h2>
           <p className="text-gray-400 max-w-sm mb-8">You haven't scheduled any services yet. Browse our professional catalog to get started.</p>
@@ -104,11 +105,11 @@ export default function MyBookingsPage() {
                     
                     <div className="flex flex-wrap items-center gap-6 text-sm text-gray-400">
                        <div className="flex items-center gap-2">
-                          <span className="p-1.5 rounded bg-white/5 border border-white/5 text-gray-300">📅</span>
+                          <span className="p-1.5 rounded bg-white/5 border border-white/5 text-gray-300"><Calendar className="w-4 h-4" /></span>
                           {new Date(booking.booking_date).toLocaleDateString(undefined, { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric'})}
                        </div>
                        <div className="flex items-center gap-2">
-                          <span className="p-1.5 rounded bg-white/5 border border-white/5 text-gray-300">⏰</span>
+                          <span className="p-1.5 rounded bg-white/5 border border-white/5 text-gray-300"><Clock className="w-4 h-4" /></span>
                           {booking.booking_time}
                        </div>
                     </div>
