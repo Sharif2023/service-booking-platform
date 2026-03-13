@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { Zap, CreditCard, Sparkles } from 'lucide-react';
 
 export default function HomePage() {
   const { user } = useAuth();
@@ -54,19 +55,19 @@ export default function HomePage() {
 
           {[
             {
-              icon: '⚡',
+              icon: <Zap className="w-8 h-8" />,
               title: 'Lightning Fast',
               desc: 'Our streamlined interface lets you secure your booking in under 60 seconds.',
               glow: 'rgba(59,130,246,0.15)'
             },
             {
-              icon: '💳',
+              icon: <CreditCard className="w-8 h-8" />,
               title: 'Bank-Grade Security',
               desc: 'Transactions are protected by state-of-the-art Stripe encryption.',
               glow: 'rgba(139,92,246,0.15)'
             },
             {
-              icon: '✨',
+              icon: <Sparkles className="w-8 h-8" />,
               title: 'Vetted Quality',
               desc: 'Every service provider is rigorously screened to ensure excellence.',
               glow: 'rgba(234,179,8,0.15)'

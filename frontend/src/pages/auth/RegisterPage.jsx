@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { authAPI } from '../../services/api';
 import { useAuth } from '../../hooks/useAuth';
 import { useNotification } from '../../hooks/useNotification';
+import { User, Mail, Phone, Lock } from 'lucide-react';
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
@@ -58,7 +59,7 @@ export default function RegisterPage() {
              <div className="space-y-1">
                 <label className="form-label text-gray-300">Full Legal Name</label>
                 <div className="relative group">
-                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-blue-400 transition-colors">👤</span>
+                   <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 group-focus-within:text-blue-400 transition-colors" />
                    <input
                      type="text"
                      name="full_name"
@@ -66,7 +67,7 @@ export default function RegisterPage() {
                      value={form.full_name}
                      onChange={handleChange}
                      required
-                     className="form-input bg-black/40 pl-12 focus:bg-[rgba(79,142,247,0.05)] border-white/5 focus:border-blue-500/50"
+                     className="form-input bg-black/40 !pl-14 focus:bg-[rgba(79,142,247,0.05)] border-white/5 focus:border-blue-500/50"
                      autoComplete="name"
                    />
                 </div>
@@ -75,7 +76,7 @@ export default function RegisterPage() {
              <div className="space-y-1">
                 <label className="form-label text-gray-300">Email Address</label>
                 <div className="relative group">
-                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-blue-400 transition-colors">✉️</span>
+                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 group-focus-within:text-blue-400 transition-colors" />
                    <input
                      type="email"
                      name="email"
@@ -83,7 +84,7 @@ export default function RegisterPage() {
                      value={form.email}
                      onChange={handleChange}
                      required
-                     className="form-input bg-black/40 pl-12 focus:bg-[rgba(79,142,247,0.05)] border-white/5 focus:border-blue-500/50"
+                     className="form-input bg-black/40 !pl-14 focus:bg-[rgba(79,142,247,0.05)] border-white/5 focus:border-blue-500/50"
                      autoComplete="email"
                    />
                 </div>
@@ -92,7 +93,7 @@ export default function RegisterPage() {
              <div className="space-y-1">
                 <label className="form-label text-gray-300">Phone Number</label>
                 <div className="relative group">
-                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-blue-400 transition-colors">📱</span>
+                   <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 group-focus-within:text-blue-400 transition-colors" />
                    <input
                      type="tel"
                      name="phone"
@@ -100,7 +101,7 @@ export default function RegisterPage() {
                      value={form.phone}
                      onChange={handleChange}
                      required
-                     className="form-input bg-black/40 pl-12 focus:bg-[rgba(79,142,247,0.05)] border-white/5 focus:border-blue-500/50"
+                     className="form-input bg-black/40 !pl-14 focus:bg-[rgba(79,142,247,0.05)] border-white/5 focus:border-blue-500/50"
                      autoComplete="tel"
                    />
                 </div>
@@ -109,7 +110,7 @@ export default function RegisterPage() {
              <div className="space-y-1">
                 <label className="form-label text-gray-300">Secure Password</label>
                 <div className="relative group">
-                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-blue-400 transition-colors">🔒</span>
+                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 group-focus-within:text-blue-400 transition-colors" />
                    <input
                      type="password"
                      name="password"
@@ -117,7 +118,7 @@ export default function RegisterPage() {
                      value={form.password}
                      onChange={handleChange}
                      required
-                     className="form-input bg-black/40 pl-12 focus:bg-[rgba(79,142,247,0.05)] border-white/5 focus:border-blue-500/50 tracking-widest"
+                     className="form-input bg-black/40 !pl-14 focus:bg-[rgba(79,142,247,0.05)] border-white/5 focus:border-blue-500/50 tracking-widest"
                      autoComplete="new-password"
                    />
                 </div>

@@ -4,6 +4,7 @@ import { servicesAPI } from '../services/api';
 import { useBooking } from '../hooks/useBooking';
 import { useNotification } from '../hooks/useNotification';
 import LoadingSpinner from '../components/shared/LoadingSpinner';
+import { Lock, Calendar, Clock, Check } from 'lucide-react';
 
 export default function BookingPage() {
   const { id } = useParams();
@@ -85,11 +86,11 @@ export default function BookingPage() {
 
             <div className="mt-6 pt-6 border-t border-white/5 space-y-3">
                <div className="flex items-center gap-3 text-sm text-gray-300 transform hover:translate-x-1 transition-transform">
-                  <span className="w-6 h-6 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center">✓</span>
+                  <span className="w-6 h-6 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center"><Check className="w-4 h-4" /></span>
                   Instant Confirmation
                </div>
                <div className="flex items-center gap-3 text-sm text-gray-300 transform hover:translate-x-1 transition-transform">
-                  <span className="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center">🔒</span>
+                  <span className="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center"><Lock className="w-4 h-4" /></span>
                   Secure Payment (Stripe)
                </div>
             </div>
@@ -113,10 +114,10 @@ export default function BookingPage() {
                      value={form.booking_date}
                      onChange={handleChange}
                      required
-                     className="form-input bg-[rgba(0,0,0,0.2)] pl-12 focus:bg-white/5"
+                     className="form-input bg-[rgba(0,0,0,0.2)] !pl-14 focus:bg-white/5"
                      style={{ colorScheme: 'dark' }}
                    />
-                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">📅</span>
+                   <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none" />
                 </div>
               </div>
 
@@ -129,10 +130,10 @@ export default function BookingPage() {
                      value={form.booking_time}
                      onChange={handleChange}
                      required
-                     className="form-input bg-[rgba(0,0,0,0.2)] pl-12 focus:bg-white/5"
+                     className="form-input bg-[rgba(0,0,0,0.2)] !pl-14 focus:bg-white/5"
                      style={{ colorScheme: 'dark' }}
                    />
-                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">⏰</span>
+                   <Clock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none" />
                 </div>
               </div>
             </div>

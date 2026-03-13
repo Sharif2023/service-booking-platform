@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { servicesAPI } from '../../services/api';
 import { useNotification } from '../../hooks/useNotification';
 import LoadingSpinner from '../../components/shared/LoadingSpinner';
+import { Sparkles, Link as LinkIcon, Package, Trash2 } from 'lucide-react';
 
 export default function AdminServicesPage() {
   const [services, setServices] = useState([]);
@@ -83,7 +84,7 @@ export default function AdminServicesPage() {
           <div className="absolute inset-0 bg-blue-500/10 blur-xl rounded-2xl -z-10"></div>
           <form onSubmit={handleSubmit} className="glass-card p-8 border border-blue-500/30">
             <h3 className="text-xl font-bold mb-6 font-['Outfit'] flex items-center gap-2 text-blue-400">
-               <span className="p-1.5 bg-blue-500/20 rounded text-blue-300 border border-blue-500/30 text-sm">✨</span>
+               <span className="p-1.5 bg-blue-500/20 rounded text-blue-300 border border-blue-500/30 text-sm"><Sparkles className="w-4 h-4 text-blue-300" /></span>
                Create New Offering
             </h3>
             
@@ -113,7 +114,7 @@ export default function AdminServicesPage() {
                       onChange={handleChange}
                       required
                       step="0.01"
-                      className="form-input bg-black/40 pl-8 focus:bg-[rgba(79,142,247,0.05)]"
+                      className="form-input bg-black/40 !pl-10 focus:bg-[rgba(79,142,247,0.05)]"
                     />
                  </div>
                </div>
@@ -122,14 +123,14 @@ export default function AdminServicesPage() {
             <div className="space-y-1 mb-6">
               <label className="form-label text-blue-200">Cover Image URL (Optional)</label>
               <div className="relative">
-                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">🔗</span>
+                 <LinkIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                  <input
                    type="url"
                    name="image_url"
                    placeholder="https://example.com/image.jpg"
                    value={form.image_url}
                    onChange={handleChange}
-                   className="form-input bg-black/40 pl-10 focus:bg-[rgba(79,142,247,0.05)]"
+                   className="form-input bg-black/40 !pl-12 focus:bg-[rgba(79,142,247,0.05)]"
                  />
               </div>
             </div>
@@ -169,7 +170,7 @@ export default function AdminServicesPage() {
                  </>
               ) : (
                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-900/30 to-purple-900/30 border-b border-white/5">
-                    <span className="text-4xl opacity-10">📦</span>
+                    <Package className="w-12 h-12 text-blue-400 opacity-20" />
                  </div>
               )}
               
@@ -178,7 +179,7 @@ export default function AdminServicesPage() {
                    onClick={() => handleDelete(service.id)}
                    className="btn-danger flex flex-col items-center gap-2 transform translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 px-6 py-4 shadow-xl border-red-500/40 bg-red-900/80 hover:bg-red-800"
                  >
-                   <span className="text-xl">🗑️</span>
+                   <Trash2 className="w-6 h-6 mb-1" />
                    <span className="text-xs font-bold tracking-wider uppercase">Delete Item</span>
                  </button>
               </div>

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { adminAPI } from '../../services/api';
 import { useNotification } from '../../hooks/useNotification';
 import LoadingSpinner from '../../components/shared/LoadingSpinner';
+import { Inbox } from 'lucide-react';
 
 export default function AdminBookingsPage() {
   const [bookings, setBookings] = useState([]);
@@ -122,7 +123,7 @@ export default function AdminBookingsPage() {
           
           {bookings.length === 0 && (
              <div className="p-16 text-center flex flex-col items-center">
-                 <div className="text-5xl mb-4 opacity-30">📭</div>
+                 <Inbox className="w-16 h-16 text-gray-500 mb-4 opacity-30" />
                  <h3 className="text-xl font-bold text-gray-300">No records found</h3>
                  <p className="text-gray-500 mt-2">There are currently no bookings in the database.</p>
              </div>

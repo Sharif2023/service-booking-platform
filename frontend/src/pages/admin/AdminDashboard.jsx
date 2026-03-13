@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { adminAPI } from '../../services/api';
 import { useNotification } from '../../hooks/useNotification';
 import LoadingSpinner from '../../components/shared/LoadingSpinner';
+import { ClipboardList, CheckCircle, Clock, DollarSign, Calendar, Rocket } from 'lucide-react';
 
 export default function AdminDashboard() {
   const [analytics, setAnalytics] = useState(null);
@@ -42,10 +43,10 @@ export default function AdminDashboard() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: 'Total Bookings', value: analytics.totalBookings, color: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/20', icon: '📋' },
-          { label: 'Confirmed', value: analytics.confirmedBookings, color: 'text-green-400', bg: 'bg-green-500/10', border: 'border-green-500/20', icon: '✅' },
-          { label: 'Pending', value: analytics.pendingBookings, color: 'text-yellow-400', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20', icon: '⏳' },
-          { label: 'Total Revenue', value: `$${analytics.totalRevenue}`, color: 'text-purple-400', bg: 'bg-purple-500/10', border: 'border-purple-500/20', icon: '💰' },
+          { label: 'Total Bookings', value: analytics.totalBookings, color: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/20', icon: <ClipboardList className="w-6 h-6" /> },
+          { label: 'Confirmed', value: analytics.confirmedBookings, color: 'text-green-400', bg: 'bg-green-500/10', border: 'border-green-500/20', icon: <CheckCircle className="w-6 h-6" /> },
+          { label: 'Pending', value: analytics.pendingBookings, color: 'text-yellow-400', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20', icon: <Clock className="w-6 h-6" /> },
+          { label: 'Total Revenue', value: `$${analytics.totalRevenue}`, color: 'text-purple-400', bg: 'bg-purple-500/10', border: 'border-purple-500/20', icon: <DollarSign className="w-6 h-6" /> },
         ].map((stat, i) => (
           <div key={i} className={`stat-card relative overflow-hidden group shadow`}>
             {/* Background glow based on type */}
@@ -69,8 +70,8 @@ export default function AdminDashboard() {
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <div className="flex items-start justify-between relative z-10">
              <div>
-                <div className="w-14 h-14 rounded-2xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center text-3xl mb-6 shadow-lg text-blue-400">
-                   🗓️
+                <div className="w-14 h-14 rounded-2xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center mb-6 shadow-lg text-blue-400">
+                   <Calendar className="w-8 h-8" />
                 </div>
                 <h2 className="text-2xl font-bold mb-3 font-['Outfit'] group-hover:text-blue-300 transition-colors">Manage Bookings</h2>
                 <p className="text-gray-400 text-sm leading-relaxed max-w-sm border-l-2 border-blue-500/30 pl-3">
@@ -89,8 +90,8 @@ export default function AdminDashboard() {
           <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <div className="flex items-start justify-between relative z-10">
              <div>
-                <div className="w-14 h-14 rounded-2xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-3xl mb-6 shadow-lg text-purple-400">
-                   🚀
+                <div className="w-14 h-14 rounded-2xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center mb-6 shadow-lg text-purple-400">
+                   <Rocket className="w-8 h-8" />
                 </div>
                 <h2 className="text-2xl font-bold mb-3 font-['Outfit'] group-hover:text-purple-300 transition-colors">Manage Services</h2>
                 <p className="text-gray-400 text-sm leading-relaxed max-w-sm border-l-2 border-purple-500/30 pl-3">

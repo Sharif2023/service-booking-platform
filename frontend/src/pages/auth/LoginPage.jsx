@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { authAPI } from '../../services/api';
 import { useAuth } from '../../hooks/useAuth';
 import { useNotification } from '../../hooks/useNotification';
+import { Mail, Lock } from 'lucide-react';
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -53,8 +54,8 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
           <div className="space-y-1">
              <label className="form-label text-gray-300">Email Address</label>
-             <div className="relative group">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-blue-400 transition-colors">✉️</span>
+              <div className="relative group">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 group-focus-within:text-blue-400 transition-colors" />
                 <input
                   type="email"
                   name="email"
@@ -62,7 +63,7 @@ export default function LoginPage() {
                   value={form.email}
                   onChange={handleChange}
                   required
-                  className="form-input bg-black/40 pl-12 focus:bg-[rgba(79,142,247,0.05)] border-white/5 focus:border-blue-500/50"
+                  className="form-input bg-black/40 !pl-14 focus:bg-[rgba(79,142,247,0.05)] border-white/5 focus:border-blue-500/50"
                   autoComplete="email"
                 />
              </div>
@@ -73,7 +74,7 @@ export default function LoginPage() {
                 <label className="form-label text-gray-300 mb-0">Password</label>
              </div>
              <div className="relative group mt-1">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-blue-400 transition-colors">🔒</span>
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 group-focus-within:text-blue-400 transition-colors" />
                 <input
                   type="password"
                   name="password"
@@ -81,7 +82,7 @@ export default function LoginPage() {
                   value={form.password}
                   onChange={handleChange}
                   required
-                  className="form-input bg-black/40 pl-12 focus:bg-[rgba(79,142,247,0.05)] border-white/5 focus:border-blue-500/50 tracking-widest"
+                  className="form-input bg-black/40 !pl-14 focus:bg-[rgba(79,142,247,0.05)] border-white/5 focus:border-blue-500/50 tracking-widest"
                   autoComplete="current-password"
                 />
              </div>
