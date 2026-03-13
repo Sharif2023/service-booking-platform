@@ -66,8 +66,8 @@ JWT_SECRET=your_super_secret_jwt_key
 STRIPE_SECRET_KEY=sk_test_xxxxx
 STRIPE_WEBHOOK_SECRET=whsec_xxxxx
 
-EMAIL_USER=sharifislam0505@gmail.com
-EMAIL_PASSWORD=bwiw xwdp uzxf mynq
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASSWORD=your_app_password
 
 FRONTEND_URL=http://localhost:5173
 PORT=5000
@@ -399,8 +399,8 @@ STRIPE_SECRET_KEY=sk_test_...
 STRIPE_PUBLIC_KEY=pk_test_...
 STRIPE_WEBHOOK_SECRET=whsec_...
 
-EMAIL_USER=sharifislam0505@gmail.com
-EMAIL_PASSWORD=bwiw xwdp uzxf mynq
+EMAIL_USER=your_gmail@gmail.com
+EMAIL_PASSWORD=your_app_password
 
 FRONTEND_URL=http://localhost:5173
 PORT=5000

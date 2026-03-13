@@ -12,7 +12,7 @@ Mark each step: ✅ Pass | ❌ Fail | ⏳ Pending
   - `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`, `DB_NAME`
   - `JWT_SECRET`
   - `STRIPE_SECRET_KEY`, `STRIPE_PUBLIC_KEY`, `STRIPE_WEBHOOK_SECRET`
-  - `EMAIL_USER=sharifislam0505@gmail.com`, `EMAIL_PASSWORD=bwiw xwdp uzxf mynq`
+  - `EMAIL_USER`, `EMAIL_PASSWORD`
   - `FRONTEND_URL=http://localhost:5173`, `PORT=5000`
 - [ ] PostgreSQL is running
 - [ ] Database created: `createdb booking_platform`
