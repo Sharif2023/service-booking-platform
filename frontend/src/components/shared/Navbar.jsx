@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useNotification } from '../../hooks/useNotification';
 import { Link, useLocation } from 'react-router-dom';
+import logoImg from '../../assets/logo.jpg';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -46,8 +47,8 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-20">
           
           <Link to="/" className="flex items-center gap-3 flex-shrink-0 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg group-hover:shadow-blue-500/30 transition-shadow">
-              <span className="text-white font-black text-xl font-['Inter']">S</span>
+            <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center shadow-lg group-hover:shadow-blue-500/30 transition-shadow bg-white">
+              <img src={logoImg} alt="ServiceHub Logo" className="w-full h-full object-cover" />
             </div>
             <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400 font-['Outfit']">
               ServiceHub
