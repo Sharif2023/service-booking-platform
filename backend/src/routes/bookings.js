@@ -53,13 +53,20 @@ router.post('/create-session', authMiddleware, [
       return res.status(400).json({ error: 'Service has invalid price configuration' });
     }
 
-    // Create booking with pending status
-    console.log('[CreateSession] Creating booking in DB...');
-    const booking = await Booking.create(userId, service_id, booking_date, booking_time, special_requests);
-    console.log('[CreateSession] Booking created in DB. ID:', booking?.id);
+    // Prevent duplicates: Check if a pending booking already exists for this slot
+    console.log('[CreateSession] Checking for existing pending booking...');
+    let booking = await Booking.findPendingBooking(userId, service_id, booking_date, booking_time);
+    
+    if (booking) {
+      console.log('[CreateSession] Found existing pending booking. Reusing ID:', booking.id);
+    } else {
+      console.log('[CreateSession] No existing pending booking found. Creating new one...');
+      booking = await Booking.create(userId, service_id, booking_date, booking_time, special_requests);
+      console.log('[CreateSession] New booking created in DB. ID:', booking?.id);
+    }
 
     if (!booking) {
-      throw new Error('Failed to create booking record in database');
+      throw new Error('Failed to create or retrieve booking record');
     }
 
     // Create Stripe checkout session

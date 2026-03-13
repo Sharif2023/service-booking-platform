@@ -57,6 +57,14 @@ class Booking {
     const result = await pool.query('SELECT * FROM bookings WHERE stripe_session_id = $1', [session_id]);
     return result.rows[0];
   }
+
+  static async findPendingBooking(user_id, service_id, booking_date, booking_time) {
+    const result = await pool.query(
+      'SELECT * FROM bookings WHERE user_id = $1 AND service_id = $2 AND booking_date = $3 AND booking_time = $4 AND status = \'pending\'',
+      [user_id, service_id, booking_date, booking_time]
+    );
+    return result.rows[0];
+  }
 }
 
 module.exports = Booking;
