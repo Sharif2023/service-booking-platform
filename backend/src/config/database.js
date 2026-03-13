@@ -2,12 +2,12 @@ const { Pool } = require('pg');
 require('dotenv').config();
 
 const config = {
-  connectionString: process.env.DATABASE_URL,
-  user: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || 'postgres',
-  host: process.env.DB_HOST || 'localhost',
+  connectionString: (process.env.DATABASE_URL || '').trim(),
+  user: (process.env.DB_USER || 'postgres').trim(),
+  password: (process.env.DB_PASSWORD || 'postgres').trim(),
+  host: (process.env.DB_HOST || 'localhost').trim(),
   port: process.env.DB_PORT || 5432,
-  database: process.env.DB_NAME || 'booking_platform',
+  database: (process.env.DB_NAME || 'booking_platform').trim(),
 };
 
 // Add SSL for production/Supabase

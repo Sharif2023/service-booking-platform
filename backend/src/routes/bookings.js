@@ -34,9 +34,16 @@ router.post('/create-session', authMiddleware, [
     }
 
     // Create booking with pending status
+    console.log('[CreateSession] Creating booking in DB...');
     const booking = await Booking.create(req.user.id, service_id, booking_date, booking_time, special_requests);
+    console.log('[CreateSession] Booking created in DB. ID:', booking.id);
 
     // Create Stripe checkout session
+    console.log('[CreateSession] Initializing Stripe with environment vars...');
+    console.log('[CreateSession] FRONTEND_URL:', process.env.FRONTEND_URL ? 'PRESENT' : 'MISSING');
+    console.log('[CreateSession] STRIPE_SECRET_KEY:', process.env.STRIPE_SECRET_KEY ? 'PRESENT' : 'MISSING');
+
+    console.log('[CreateSession] Creating Stripe session...');
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
