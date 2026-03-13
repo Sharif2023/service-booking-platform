@@ -1,5 +1,6 @@
 import Navbar from './Navbar';
 import Toast from './Toast';
+import logoImg from '../../assets/logo.jpg';
 
 export default function Layout({ children }) {
   return (
@@ -20,8 +21,8 @@ export default function Layout({ children }) {
       <footer className="w-full border-t border-white/10 bg-gray-900/50 backdrop-blur-md py-8">
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                <span className="text-white font-bold text-lg">S</span>
+             <div className="w-8 h-8 rounded-lg overflow-hidden bg-white flex items-center justify-center">
+                <img src={logoImg} alt="ServiceHub Logo" className="w-full h-full object-cover" />
              </div>
              <span className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400 font-['Outfit']">ServiceHub</span>
           </div>
