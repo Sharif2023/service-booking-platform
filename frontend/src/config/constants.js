@@ -1,5 +1,5 @@
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-export const STRIPE_PUBLIC_KEY = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
+export const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').trim();
+export const STRIPE_PUBLIC_KEY = (import.meta.env.VITE_STRIPE_PUBLIC_KEY || '').trim();
 
 if (!STRIPE_PUBLIC_KEY) {
   console.error('❌ VITE_STRIPE_PUBLIC_KEY is missing from environment variables!');
