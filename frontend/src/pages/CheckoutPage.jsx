@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from '@stripe/react-stripe-js';
@@ -17,6 +17,7 @@ export default function CheckoutPage() {
   const { addNotification } = useNotification();
   const [loading, setLoading] = useState(true);
   const [clientSecret, setClientSecret] = useState(null);
+  const hasInitialized = useRef(false);
 
   useEffect(() => {
     if (!booking || !booking.service_id) {
@@ -25,7 +26,10 @@ export default function CheckoutPage() {
       return;
     }
 
-    createStripeSession();
+    if (!hasInitialized.current) {
+      hasInitialized.current = true;
+      createStripeSession();
+    }
   }, [booking]);
 
   const createStripeSession = async () => {
@@ -127,7 +131,7 @@ export default function CheckoutPage() {
          </div>
 
          <div className="lg:col-span-2 glass-card p-4 md:p-8 order-1 lg:order-2">
-            <EmbeddedCheckoutProvider stripe={stripePromise} options={{ clientSecret, appearance }}>
+            <EmbeddedCheckoutProvider stripe={stripePromise} options={{ clientSecret }}>
               <div className="min-h-[500px]">
                  <EmbeddedCheckout />
               </div>
