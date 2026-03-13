@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useNotification } from '../../hooks/useNotification';
 import { Link, useLocation } from 'react-router-dom';
+import { Menu, X, LogOut, User as UserIcon, Settings, Calendar, Briefcase } from 'lucide-react';
 import logoImg from '../../assets/logo.jpg';
 
 export default function Navbar() {
@@ -9,12 +10,17 @@ export default function Navbar() {
   const { addNotification } = useNotification();
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
 
   const handleLogout = () => {
     logout();
@@ -39,14 +45,16 @@ export default function Navbar() {
 
   return (
     <nav className={`w-full sticky top-0 z-50 transition-all duration-300 border-b ${
-      scrolled 
-        ? 'bg-gray-900/80 backdrop-blur-xl border-white/10 shadow-xl' 
-        : 'bg-transparent border-transparent'
+      isMenuOpen 
+        ? 'bg-[#030712] border-white/10 shadow-2xl' 
+        : scrolled 
+          ? 'bg-gray-900/80 backdrop-blur-xl border-white/10 shadow-xl' 
+          : 'bg-transparent border-transparent'
     }`}>
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           
-          <Link to="/" className="flex items-center gap-3 flex-shrink-0 group">
+          <Link to="/" className="flex items-center gap-3 flex-shrink-0 group relative z-50">
             <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center shadow-lg group-hover:shadow-blue-500/30 transition-shadow bg-white">
               <img src={logoImg} alt="ServiceHub Logo" className="w-full h-full object-cover" />
             </div>
@@ -55,6 +63,7 @@ export default function Navbar() {
             </span>
           </Link>
 
+          {/* Desktop Navigation */}
           <div className="hidden md:flex flex-1 items-center justify-center gap-2">
             <NavLink to="/">Home</NavLink>
             <NavLink to="/services">Services</NavLink>
@@ -62,7 +71,8 @@ export default function Navbar() {
             {user?.role === 'admin' && <NavLink to="/admin">Admin</NavLink>}
           </div>
 
-          <div className="flex items-center justify-end gap-4 flex-shrink-0">
+          {/* Desktop Right Actions */}
+          <div className="hidden md:flex items-center justify-end gap-4 flex-shrink-0">
             {user ? (
               <div className="flex items-center gap-4 pl-4 border-l border-white/10">
                 <div className="flex items-center gap-3">
@@ -88,7 +98,62 @@ export default function Navbar() {
               </div>
             )}
           </div>
+
+          {/* Mobile Menu Button */}
+          <div className="flex items-center md:hidden relative z-50">
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="p-2 text-gray-400 hover:text-white transition-colors"
+            >
+              {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
+          </div>
           
+        </div>
+      </div>
+
+      {/* Mobile Menu Drawer */}
+      <div className={`md:hidden fixed inset-0 z-40 !bg-[#030712] transition-all duration-300 ease-in-out ${
+        isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'
+      }`}>
+        <div className="flex flex-col h-full pt-28 px-6 pb-10">
+          <div className="flex flex-col gap-6 text-center">
+            <Link to="/" className="text-2xl font-bold text-white hover:text-blue-400 transition-colors">Home</Link>
+            <Link to="/services" className="text-2xl font-bold text-white hover:text-blue-400 transition-colors">Services</Link>
+            {user && (
+              <Link to="/bookings" className="text-2xl font-bold text-white hover:text-blue-400 transition-colors">My Bookings</Link>
+            )}
+            {user?.role === 'admin' && (
+              <Link to="/admin" className="text-2xl font-bold text-white hover:text-blue-400 transition-colors">Admin Panel</Link>
+            )}
+          </div>
+
+          <div className="mt-auto pt-10 border-t border-white/10">
+            {user ? (
+              <div className="space-y-6">
+                <div className="flex flex-col items-center gap-3">
+                  <div className="w-16 h-16 bg-blue-500/20 border border-blue-500/30 text-blue-400 rounded-2xl flex items-center justify-center text-2xl font-bold shadow-inner">
+                    {user.full_name?.charAt(0)?.toUpperCase() || 'U'}
+                  </div>
+                  <div className="text-center">
+                    <p className="text-white font-bold text-lg">{user.full_name}</p>
+                    <p className="text-gray-500 text-sm">{user.email}</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={handleLogout}
+                  className="w-full btn-secondary text-red-400 border-red-500/20 py-4 flex items-center justify-center gap-2"
+                >
+                  <LogOut size={20} /> Logout
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-4">
+                <Link to="/login" className="w-full btn-secondary py-4">Log in</Link>
+                <Link to="/register" className="w-full btn-primary py-4">Create Account</Link>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </nav>

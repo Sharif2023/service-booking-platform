@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react';
 import { bookingsAPI } from '../services/api';
 import { useNotification } from '../hooks/useNotification';
+import { useBooking } from '../hooks/useBooking';
 import LoadingSpinner from '../components/shared/LoadingSpinner';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Calendar, Clock } from 'lucide-react';
 
 export default function MyBookingsPage() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const { addNotification } = useNotification();
+  const { setBooking } = useBooking();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchBookings();
@@ -38,6 +41,19 @@ export default function MyBookingsPage() {
         'error'
       );
     }
+  };
+
+  const handlePay = (booking) => {
+    setBooking({
+      id: booking.id,
+      service_id: booking.service_id,
+      service_name: booking.service_name,
+      service_price: booking.service_price || booking.price,
+      booking_date: booking.booking_date,
+      booking_time: booking.booking_time,
+      special_requests: booking.special_requests
+    });
+    navigate('/checkout');
   };
 
   if (loading) return <LoadingSpinner />;
@@ -82,7 +98,7 @@ export default function MyBookingsPage() {
                <div className="p-6 sm:p-8 flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
                   <div className="flex-1 space-y-4">
                     <div className="flex flex-wrap items-center gap-4">
-                       <h3 className="text-xl md:text-2xl font-bold font-['Outfit']text-white">
+                       <h3 className="text-xl md:text-2xl font-bold font-['Outfit'] text-white">
                          {booking.service_name}
                        </h3>
                        <span
@@ -128,12 +144,20 @@ export default function MyBookingsPage() {
                      </span>
                      
                      {booking.status === 'pending' && (
-                       <button
-                         onClick={() => handleCancel(booking.id)}
-                         className="btn-danger w-full md:w-auto whitespace-nowrap"
-                       >
-                         Cancel Booking
-                       </button>
+                       <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                        <button
+                          onClick={() => handlePay(booking)}
+                          className="btn-primary py-2 px-6 whitespace-nowrap shadow-[0_0_15px_rgba(79,142,247,0.3)]"
+                        >
+                          Pay Now
+                        </button>
+                        <button
+                          onClick={() => handleCancel(booking.id)}
+                          className="btn-danger py-2 px-6 whitespace-nowrap bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20"
+                        >
+                          Cancel
+                        </button>
+                       </div>
                      )}
                      
                      {booking.status === 'confirmed' && (

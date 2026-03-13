@@ -16,7 +16,7 @@ class Booking {
 
   static async getByUserId(user_id) {
     const result = await pool.query(
-      `SELECT b.*, s.name as service_name, s.price, s.image_url 
+      `SELECT b.*, s.name as service_name, s.price as service_price, s.image_url 
        FROM bookings b 
        JOIN services s ON b.service_id = s.id 
        WHERE b.user_id = $1 
@@ -28,7 +28,7 @@ class Booking {
 
   static async getAll() {
     const result = await pool.query(
-      `SELECT b.*, u.full_name, u.email, s.name as service_name, s.price 
+      `SELECT b.*, u.full_name as user_name, u.email, s.name as service_name, s.price as service_price 
        FROM bookings b 
        JOIN users u ON b.user_id = u.id 
        JOIN services s ON b.service_id = s.id 

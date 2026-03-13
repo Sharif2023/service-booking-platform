@@ -11,12 +11,14 @@ const seedDatabase = async () => {
     const adminEmail = 'admin@servicehub.com';
     const existingAdmin = await User.findByEmail(adminEmail);
     if (!existingAdmin) {
-      const hashedPassword = await bcryptjs.hash('admin123', 10);
-      await pool.query(
-        'INSERT INTO admin_users (email, password_hash, full_name, role) VALUES ($1, $2, $3, $4)',
-        [adminEmail, hashedPassword, 'Admin User', 'admin']
-      );
-      console.log('✓ Admin user created (admin@servicehub.com / admin123)');
+      await User.create(adminEmail, 'admin123', 'Admin User', '1234567890', 'admin');
+      // Set admin as verified
+      const newUser = await User.findByEmail(adminEmail);
+      await pool.query('UPDATE users SET is_verified = TRUE WHERE id = $1', [newUser.id]);
+      console.log('✓ Admin user created and verified in users table (admin@servicehub.com / admin123)');
+    } else {
+      await pool.query('UPDATE users SET role = $1, is_verified = TRUE WHERE id = $2', ['admin', existingAdmin.id]);
+      console.log('✓ Existing admin user ensured to be verified');
     }
 
     // Services
