@@ -4,6 +4,7 @@ import { authAPI } from '../../services/api';
 import { useAuth } from '../../hooks/useAuth';
 import { useNotification } from '../../hooks/useNotification';
 import { User, Mail, Phone, Lock } from 'lucide-react';
+import logo from '../../assets/logo.jpg';
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
@@ -70,6 +71,9 @@ export default function RegisterPage() {
       <div className="glass-card w-full max-w-[500px] p-8 md:p-10 relative overflow-hidden border-t-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
         
         <div className="text-center mb-10 relative z-10">
+           <div className="w-20 h-20 rounded-2xl overflow-hidden mx-auto mb-6 shadow-xl shadow-green-500/10 border border-white/10">
+              <img src={logo} alt="ServiceHub Logo" className="w-full h-full object-cover" />
+           </div>
            <h2 className="text-3xl font-bold font-['Outfit'] mb-2">Create <span className="gradient-text text-green-400">Account</span></h2>
            <p className="text-gray-400 text-sm">Join the premier network for professional services</p>
         </div>

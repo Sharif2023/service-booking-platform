@@ -4,6 +4,7 @@ import { authAPI } from '../../services/api';
 import { useAuth } from '../../hooks/useAuth';
 import { useNotification } from '../../hooks/useNotification';
 import { Mail, Lock } from 'lucide-react';
+import logo from '../../assets/logo.jpg';
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -45,8 +46,8 @@ export default function LoginPage() {
         </div>
 
         <div className="text-center mb-10 relative z-10">
-           <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center mx-auto mb-6 shadow-xl shadow-blue-500/20 border border-white/10">
-              <span className="text-white font-black text-2xl font-['Inter']">S</span>
+           <div className="w-20 h-20 rounded-2xl overflow-hidden mx-auto mb-6 shadow-xl shadow-blue-500/10 border border-white/10">
+              <img src={logo} alt="ServiceHub Logo" className="w-full h-full object-cover" />
            </div>
            <h2 className="text-3xl font-bold font-['Outfit'] mb-2"><span className="gradient-text">Welcome Back</span></h2>
            <p className="text-gray-400 text-sm">Secure access to your professional dashboard</p>

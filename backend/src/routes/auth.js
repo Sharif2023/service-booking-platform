@@ -62,27 +62,47 @@ router.post('/login', [
 ], async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log(`[Auth] Login attempt for: ${email}`);
+    
     const user = await User.findByEmail(email);
+    console.log(`[Auth] User found: ${user ? 'Yes' : 'No'}`);
 
     if (!user) {
+      console.log(`[Auth] Login failed: User not found`);
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
-    const isValidPassword = await User.verifyPassword(password, user.password_hash);
-    if (!isValidPassword) {
-      return res.status(401).json({ error: 'Invalid email or password' });
+    try {
+      const isValidPassword = await User.verifyPassword(password, user.password_hash);
+      console.log(`[Auth] Password valid: ${isValidPassword}`);
+      
+      if (!isValidPassword) {
+        console.log(`[Auth] Login failed: Invalid password`);
+        return res.status(401).json({ error: 'Invalid email or password' });
+      }
+    } catch (passwordErr) {
+      console.error(`[Auth] Password verification error:`, passwordErr.message);
+      return res.status(500).json({ error: 'Authentication internal error' });
     }
 
     if (!user.is_verified) {
+      console.log(`[Auth] Login failed: User not verified`);
       return res.status(403).json({ 
         error: 'Please verify your email address to log in.',
         needsVerification: true
       });
     }
 
-    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
-    res.json({ user: { id: user.id, email: user.email, full_name: user.full_name, phone: user.phone, role: user.role, is_verified: user.is_verified }, token });
+    try {
+      const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
+      console.log(`[Auth] Token generated for user: ${user.id}`);
+      res.json({ user: { id: user.id, email: user.email, full_name: user.full_name, phone: user.phone, role: user.role, is_verified: user.is_verified }, token });
+    } catch (jwtErr) {
+      console.error(`[Auth] JWT signing error:`, jwtErr.message);
+      return res.status(500).json({ error: 'Token generation failed' });
+    }
   } catch (err) {
+    console.error(`[Auth] Global login error:`, err.message);
     res.status(500).json({ error: err.message });
   }
 });
