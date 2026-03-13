@@ -41,9 +41,7 @@ export default function LoginPage() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-br from-blue-500/20 to-purple-600/20 blur-[100px] rounded-full pointer-events-none"></div>
 
       <div className="glass-card w-full max-w-[420px] p-8 md:p-10 relative overflow-hidden border-t-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-        <div className="absolute top-0 right-0 p-6 opacity-10">
-           <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
-        </div>
+
 
         <div className="text-center mb-10 relative z-10">
            <div className="w-20 h-20 rounded-2xl overflow-hidden mx-auto mb-6 shadow-xl shadow-blue-500/10 border border-white/10">
