@@ -22,70 +22,115 @@ router.post('/create-session', authMiddleware, [
 
   try {
     const { service_id, booking_date, booking_time, special_requests } = req.body;
-    const user = await User.findById(req.user.id);
+    const userId = req.user?.id;
+    console.log('[CreateSession] Request started for User ID:', userId);
+    console.log('[CreateSession] Params:', { service_id, booking_date, booking_time });
+
+    if (!userId) {
+      console.error('[CreateSession] No user ID found in request!');
+      return res.status(401).json({ error: 'Unauthorized: User ID missing' });
+    }
+
+    const user = await User.findById(userId);
+    console.log('[CreateSession] User lookup:', user ? `Found (${user.email})` : 'NOT FOUND');
+    
+    if (!user) {
+      console.error('[CreateSession] User not found in database for ID:', userId);
+      return res.status(404).json({ error: 'User not found' });
+    }
+
     const service = await Service.getById(service_id);
-
-    console.log('Found user:', user ? user.email : 'NOT FOUND');
-    console.log('Found service:', service ? service.name : 'NOT FOUND');
-
+    console.log('[CreateSession] Service lookup:', service ? `Found (${service.name}, Price: ${service.price})` : 'NOT FOUND');
 
     if (!service) {
+      console.error('[CreateSession] Service not found for ID:', service_id);
       return res.status(404).json({ error: 'Service not found' });
+    }
+
+    const price = parseFloat(service.price || service.service_price);
+    if (isNaN(price)) {
+      console.error('[CreateSession] Invalid price detected:', service.price);
+      return res.status(400).json({ error: 'Service has invalid price configuration' });
     }
 
     // Create booking with pending status
     console.log('[CreateSession] Creating booking in DB...');
-    const booking = await Booking.create(req.user.id, service_id, booking_date, booking_time, special_requests);
-    console.log('[CreateSession] Booking created in DB. ID:', booking.id);
+    const booking = await Booking.create(userId, service_id, booking_date, booking_time, special_requests);
+    console.log('[CreateSession] Booking created in DB. ID:', booking?.id);
+
+    if (!booking) {
+      throw new Error('Failed to create booking record in database');
+    }
 
     // Create Stripe checkout session
-    console.log('[CreateSession] Initializing Stripe with environment vars...');
-    console.log('[CreateSession] FRONTEND_URL:', process.env.FRONTEND_URL ? 'PRESENT' : 'MISSING');
-    console.log('[CreateSession] STRIPE_SECRET_KEY:', process.env.STRIPE_SECRET_KEY ? 'PRESENT' : 'MISSING');
+    const frontendUrl = (process.env.FRONTEND_URL || '').trim();
+    const stripeKey = (process.env.STRIPE_SECRET_KEY || '').trim();
+    
+    console.log('[CreateSession] Environment Check:');
+    console.log('- FRONTEND_URL:', frontendUrl || 'MISSING');
+    console.log('- STRIPE_KEY status:', stripeKey ? 'PRESENT' : 'MISSING');
+    console.log('- STRIPE_KEY length:', stripeKey.length);
 
-    console.log('[CreateSession] Creating Stripe session...');
-    const session = await stripe.checkout.sessions.create({
+    if (!stripeKey) {
+      throw new Error('STRIPE_SECRET_KEY is missing in environment variables');
+    }
+
+    console.log('[CreateSession] Calling Stripe API (checkout.sessions.create)...');
+    
+    const sessionConfig = {
       line_items: [
         {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: service.name,
+              name: String(service.name),
               description: `${booking_date} at ${booking_time}`,
             },
-            unit_amount: Math.round(service.price * 100),
+            unit_amount: Math.round(price * 100),
           },
           quantity: 1,
         },
       ],
       mode: 'payment',
       ui_mode: 'embedded',
-      return_url: `${process.env.FRONTEND_URL}/booking-success?session_id={CHECKOUT_SESSION_ID}`,
+      return_url: `${frontendUrl}/booking-success?session_id={CHECKOUT_SESSION_ID}`,
       customer_email: user.email,
       metadata: {
-        booking_id: booking.id,
-        user_id: req.user.id,
+        booking_id: String(booking.id),
+        user_id: String(userId),
       },
-    });
+    };
+
+    console.log('[CreateSession] Stripe Config:', JSON.stringify(sessionConfig, null, 2));
+
+    const session = await stripe.checkout.sessions.create(sessionConfig);
+
+    console.log('[CreateSession] Stripe API SUCCESS! Session ID:', session.id);
 
     // Save Stripe session ID
     await Booking.updateStripeSession(booking.id, session.id, null);
-
-    console.log('Stripe session created successfully:', session.id);
-    console.log('Full Session Record:', JSON.stringify(session, null, 2));
-    console.log('Client Secret available:', session.client_secret ? 'YES' : 'NO');
-    console.log('--- Create Session Request End ---');
+    console.log('[CreateSession] Booking updated with Stripe session ID');
 
     res.json({ 
       sessionId: session.id, 
-      clientSecret: session.client_secret,
-      _fullInformation: session 
+      clientSecret: session.client_secret
     });
   } catch (err) {
-    console.error('!!! Create Session Error !!!');
-    console.error('Error message:', err.message);
-    console.error('Error stack:', err.stack);
-    res.status(500).json({ error: err.message });
+    console.error('!!! Create Session Exception !!!');
+    console.error('Error Name:', err.name);
+    console.error('Error Message:', err.message);
+    if (err.stack) console.error('Error Stack:', err.stack);
+    
+    // Explicitly handle Stripe errors
+    if (err.type === 'StripeInvalidRequestError') {
+      console.error('[StripeError] Invalid Request:', err.raw?.message || err.message);
+    }
+    
+    res.status(500).json({ 
+      error: 'Failed to initialize secure checkout session',
+      details: err.message,
+      type: err.type || 'InternalError'
+    });
   }
 });
 
