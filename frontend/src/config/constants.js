@@ -1,6 +1,10 @@
 export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 export const STRIPE_PUBLIC_KEY = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
 
+if (!STRIPE_PUBLIC_KEY) {
+  console.error('❌ VITE_STRIPE_PUBLIC_KEY is missing from environment variables!');
+}
+
 export const SERVICE_CATEGORIES = ['Cleaning', 'Repair', 'Automotive', 'Renovation', 'Gardening', 'Pet Care', 'Other'];
 
 export const BOOKING_STATUS = {
