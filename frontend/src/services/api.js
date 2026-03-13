@@ -44,6 +44,7 @@ export const servicesAPI = {
 
 export const bookingsAPI = {
   createSession: (data) => api.post('/bookings/create-session', data),
+  getSessionStatus: (sessionId) => api.get(`/bookings/session-status/${sessionId}`),
   getMyBookings: () => api.get('/bookings'),
   cancelBooking: (id) => api.patch(`/bookings/${id}/cancel`),
 };

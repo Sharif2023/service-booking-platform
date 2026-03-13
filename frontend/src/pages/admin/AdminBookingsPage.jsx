@@ -30,7 +30,9 @@ export default function AdminBookingsPage() {
       addNotification(`Booking status updated to ${newStatus}`, 'success');
       fetchBookings();
     } catch (error) {
-      addNotification('Failed to update booking', 'error');
+      const errorMsg = error.response?.data?.error || error.response?.data?.message || 'Failed to update booking';
+      console.error('Update status error:', error);
+      addNotification(errorMsg, 'error');
     }
   };
 
