@@ -1,22 +1,52 @@
-import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState, useRef } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { bookingsAPI } from '../services/api';
 import { useBooking } from '../hooks/useBooking';
 import Confetti from 'react-confetti';
 import { Mail } from 'lucide-react';
 
 export default function BookingSuccessPage() {
-  const { bookingData: booking, clearBooking } = useBooking();
+  const { bookingData: booking, clearBooking, setBooking } = useBooking();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [loading, setLoading] = useState(true);
+  const [verifying, setVerifying] = useState(false);
   const [windowDimension, setWindowDimension] = useState({ width: window.innerWidth, height: window.innerHeight });
   const [showConfetti, setShowConfetti] = useState(true);
+  const hasVerified = useRef(false);
 
   useEffect(() => {
-    // If no booking found, likely accessed directly. Redirect out.
-    if (!booking) {
-      navigate('/services');
-      return;
-    }
+    const sessionId = searchParams.get('session_id');
 
+    const verifySession = async (id) => {
+      try {
+        setVerifying(true);
+        const response = await bookingsAPI.getSessionStatus(id);
+        if (response.data.payment_status === 'paid') {
+          setBooking(response.data.booking);
+        } else {
+          navigate('/bookings');
+        }
+      } catch (error) {
+        console.error('Failed to verify session:', error);
+        navigate('/services');
+      } finally {
+        setVerifying(false);
+        setLoading(false);
+      }
+    };
+
+    if (!booking && sessionId && !hasVerified.current) {
+      hasVerified.current = true;
+      verifySession(sessionId);
+    } else if (!booking && !sessionId) {
+      navigate('/services');
+    } else {
+      setLoading(false);
+    }
+  }, [booking, navigate, searchParams, setBooking]);
+
+  useEffect(() => {
     const handleResize = () => {
       setWindowDimension({ width: window.innerWidth, height: window.innerHeight });
     }
@@ -28,10 +58,17 @@ export default function BookingSuccessPage() {
     return () => {
       window.removeEventListener('resize', handleResize);
       clearTimeout(timer);
-      // We do not call clearBooking immediately here so they can see the final page, 
-      // but maybe it's managed externally or just stays resident till next booking.
     };
-  }, [booking, navigate]);
+  }, []);
+
+  if (loading || verifying) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center">
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p className="text-gray-400">Confirming your booking details...</p>
+      </div>
+    );
+  }
 
   if (!booking) return null;
 

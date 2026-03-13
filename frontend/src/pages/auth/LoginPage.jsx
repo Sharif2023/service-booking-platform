@@ -27,7 +27,8 @@ export default function LoginPage() {
       addNotification('Welcome back!', 'success');
       navigate('/');
     } catch (error) {
-      addNotification(error.response?.data?.message || 'Invalid credentials', 'error');
+      const errorMsg = error.response?.data?.error || error.response?.data?.message || 'Invalid credentials';
+      addNotification(errorMsg, error.response?.status === 403 ? 'warning' : 'error');
     } finally {
       setLoading(false);
     }
