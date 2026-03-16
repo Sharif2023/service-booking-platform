@@ -5,7 +5,7 @@ class User {
   static async create(email, password, full_name, phone, role = 'user', verification_token = null, gender = null, dob = null) {
     const hashedPassword = await bcrypt.hash(password, 10);
     const result = await pool.query(
-      'INSERT INTO users (email, password_hash, full_name, phone, role, verification_token, gender, dob) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id, email, full_name, phone, role, is_verified, created_at, gender, dob',
+      'INSERT INTO users (email, password_hash, full_name, phone, role, verification_token, gender, dob) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
       [email, hashedPassword, full_name, phone, role, verification_token, gender, dob]
     );
     return result.rows[0];
@@ -35,8 +35,12 @@ class User {
   }
 
   static async update(id, { full_name, phone, password, gender, dob }) {
+    // Defensive handling for empty/null values
+    const safeDob = (dob && dob !== '') ? dob : null;
+    const safeGender = (gender && gender !== '') ? gender : null;
+
     let query = 'UPDATE users SET full_name = $1, phone = $2, gender = $3, dob = $4';
-    const params = [full_name, phone, gender, dob, id];
+    const params = [full_name, phone, safeGender, safeDob, id];
 
     if (password) {
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -44,7 +48,7 @@ class User {
       params.push(hashedPassword);
     }
 
-    query += ', updated_at = CURRENT_TIMESTAMP WHERE id = $5 RETURNING id, email, full_name, phone, role, gender, dob, created_at';
+    query += ', updated_at = CURRENT_TIMESTAMP WHERE id = $5 RETURNING *';
     
     const result = await pool.query(query, params);
     return result.rows[0];

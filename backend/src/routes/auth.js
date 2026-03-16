@@ -46,9 +46,21 @@ router.post('/register', [
       console.error('[Auth] Failed to send verification email:', emailErr.message);
     }
 
+    const safeUser = {
+      id: user.id,
+      email: user.email,
+      full_name: user.full_name,
+      phone: user.phone,
+      role: user.role,
+      is_verified: user.is_verified,
+      gender: user.gender,
+      dob: user.dob,
+      created_at: user.created_at
+    };
+
     res.status(201).json({ 
       message: 'Registration successful. Please check your email to verify your account.',
-      user: { id: user.id, email: user.email, full_name: user.full_name, is_verified: false, gender: user.gender, dob: user.dob }
+      user: safeUser
     });
   } catch (err) {
     next(err);
@@ -96,7 +108,20 @@ router.post('/login', [
     }
 
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
-    res.json({ user: { id: user.id, email: user.email, full_name: user.full_name, phone: user.phone, role: user.role, is_verified: user.is_verified, gender: user.gender, dob: user.dob }, token });
+    
+    const safeUser = {
+      id: user.id,
+      email: user.email,
+      full_name: user.full_name,
+      phone: user.phone,
+      role: user.role,
+      is_verified: user.is_verified,
+      gender: user.gender,
+      dob: user.dob,
+      created_at: user.created_at
+    };
+
+    res.json({ user: safeUser, token });
   } catch (err) {
     next(err);
   }
@@ -154,7 +179,19 @@ router.put('/profile', authMiddleware, async (req, res, next) => {
       dob: dob !== undefined ? dob : user.dob
     });
 
-    res.json(updatedUser);
+    const safeUser = {
+      id: updatedUser.id,
+      email: updatedUser.email,
+      full_name: updatedUser.full_name,
+      phone: updatedUser.phone,
+      role: updatedUser.role,
+      is_verified: updatedUser.is_verified,
+      gender: updatedUser.gender,
+      dob: updatedUser.dob,
+      created_at: updatedUser.created_at
+    };
+
+    res.json(safeUser);
   } catch (err) {
     next(err);
   }
