@@ -95,12 +95,19 @@ export default function ServicesPage() {
                 
                 <div className="divider opacity-50 my-4"></div>
                 
-                <div className="flex justify-between items-center mt-auto">
+                <div className="flex justify-between items-center mt-auto gap-4">
                   <div className="flex flex-col">
-                     <span className="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Price</span>
-                     <span className="text-3xl font-bold text-white font-['Outfit']">
-                        <span className="text-blue-500 text-xl mr-1">$</span>{service.price}
-                     </span>
+                     <span className="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Price & Duration</span>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-3xl font-bold text-white font-['Outfit']">
+                            <span className="text-blue-500 text-xl mr-1">$</span>{service.price}
+                        </span>
+                        {service.duration_minutes && (
+                          <span className="text-gray-400 text-sm font-medium">
+                            / {service.duration_minutes} mins
+                          </span>
+                        )}
+                      </div>
                   </div>
                   <button
                     onClick={() => handleBooking(service.id)}

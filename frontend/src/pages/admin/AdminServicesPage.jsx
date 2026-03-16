@@ -12,6 +12,7 @@ export default function AdminServicesPage() {
     name: '',
     description: '',
     price: '',
+    duration_minutes: '',
     image_url: '',
   });
   const { addNotification } = useNotification();
@@ -41,9 +42,10 @@ export default function AdminServicesPage() {
       await servicesAPI.create({
         ...form,
         price: parseFloat(form.price),
+        duration_minutes: parseInt(form.duration_minutes),
       });
       addNotification('Service created successfully', 'success');
-      setForm({ name: '', description: '', price: '', image_url: '' });
+      setForm({ name: '', description: '', price: '', duration_minutes: '', image_url: '' });
       setShowForm(false);
       fetchServices();
     } catch (error) {
@@ -102,19 +104,34 @@ export default function AdminServicesPage() {
                  />
                </div>
                
+                <div className="space-y-1">
+                  <label className="form-label text-blue-200">Price (USD)</label>
+                  <div className="relative">
+                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">$</span>
+                     <input
+                       type="number"
+                       name="price"
+                       placeholder="99.99"
+                       value={form.price}
+                       onChange={handleChange}
+                       required
+                       step="0.01"
+                       className="form-input bg-black/40 !pl-10 focus:bg-[rgba(79,142,247,0.05)]"
+                     />
+                  </div>
+               </div>
+
                <div className="space-y-1">
-                 <label className="form-label text-blue-200">Price (USD)</label>
+                 <label className="form-label text-blue-200">Duration (Minutes)</label>
                  <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">$</span>
                     <input
                       type="number"
-                      name="price"
-                      placeholder="99.99"
-                      value={form.price}
+                      name="duration_minutes"
+                      placeholder="60"
+                      value={form.duration_minutes}
                       onChange={handleChange}
                       required
-                      step="0.01"
-                      className="form-input bg-black/40 !pl-10 focus:bg-[rgba(79,142,247,0.05)]"
+                      className="form-input bg-black/40 focus:bg-[rgba(79,142,247,0.05)]"
                     />
                  </div>
                </div>
@@ -186,8 +203,15 @@ export default function AdminServicesPage() {
             </div>
             
             <div className="p-6 flex flex-col flex-1 relative z-10 -mt-10">
-              <div className="self-end bg-gradient-to-r from-blue-500 to-purple-600 text-white font-black font-['Outfit'] px-4 py-2 rounded-xl shadow-[0_8px_20px_rgba(79,142,247,0.3)] border border-white/20 mb-4 z-10 text-xl transform group-hover:-translate-y-1 transition-transform">
-                 <span className="text-sm mr-1.5 opacity-80">$</span>{service.price}
+              <div className="flex justify-between items-start mb-4 z-10">
+                <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-black font-['Outfit'] px-4 py-2 rounded-xl shadow-[0_8px_20px_rgba(79,142,247,0.3)] border border-white/20 text-xl transform group-hover:-translate-y-1 transition-transform">
+                   <span className="text-sm mr-1.5 opacity-80">$</span>{service.price}
+                </div>
+                {service.duration_minutes && (
+                  <div className="bg-white/5 backdrop-blur-md text-blue-300 font-bold font-['Outfit'] px-3 py-1.5 rounded-lg border border-white/10 text-sm">
+                    {service.duration_minutes} Mins
+                  </div>
+                )}
               </div>
               <h3 className="text-xl font-bold mb-2 font-['Outfit'] leading-tight">{service.name}</h3>
               <p className="text-gray-400 text-sm leading-relaxed line-clamp-3">
