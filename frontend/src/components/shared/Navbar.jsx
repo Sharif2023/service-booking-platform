@@ -75,14 +75,14 @@ export default function Navbar() {
           <div className="hidden md:flex items-center justify-end gap-4 flex-shrink-0">
             {user ? (
               <div className="flex items-center gap-4 pl-4 border-l border-white/10">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 bg-blue-500/20 border border-blue-500/30 text-blue-400 rounded-full flex items-center justify-center text-sm font-bold shadow-inner">
-                    {user.full_name?.charAt(0)?.toUpperCase() || 'U'}
-                  </div>
-                  <span className="hidden lg:block text-sm font-medium text-gray-300 max-w-[120px] truncate">
-                    {user.full_name}
-                  </span>
-                </div>
+                  <Link to="/profile" className="flex items-center gap-3 group/profile">
+                    <div className="w-9 h-9 bg-blue-500/20 border border-blue-500/30 text-blue-400 rounded-full flex items-center justify-center text-sm font-bold shadow-inner group-hover/profile:bg-blue-500/30 transition-colors">
+                      {user.full_name?.charAt(0)?.toUpperCase() || 'U'}
+                    </div>
+                    <span className="hidden lg:block text-sm font-medium text-gray-300 max-w-[120px] truncate group-hover/profile:text-white transition-colors">
+                      {user.full_name}
+                    </span>
+                  </Link>
                 <button onClick={handleLogout} className="text-sm font-medium text-gray-400 hover:text-red-400 transition-colors px-2 py-1">
                   Logout
                 </button>
@@ -131,7 +131,7 @@ export default function Navbar() {
           <div className="mt-auto pt-10 border-t border-white/10">
             {user ? (
               <div className="space-y-6">
-                <div className="flex flex-col items-center gap-3">
+                <Link to="/profile" className="flex flex-col items-center gap-3">
                   <div className="w-16 h-16 bg-blue-500/20 border border-blue-500/30 text-blue-400 rounded-2xl flex items-center justify-center text-2xl font-bold shadow-inner">
                     {user.full_name?.charAt(0)?.toUpperCase() || 'U'}
                   </div>
@@ -139,7 +139,7 @@ export default function Navbar() {
                     <p className="text-white font-bold text-lg">{user.full_name}</p>
                     <p className="text-gray-500 text-sm">{user.email}</p>
                   </div>
-                </div>
+                </Link>
                 <button 
                   onClick={handleLogout}
                   className="w-full btn-secondary text-red-400 border-red-500/20 py-4 flex items-center justify-center gap-2"

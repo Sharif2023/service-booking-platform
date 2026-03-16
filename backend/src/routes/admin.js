@@ -9,17 +9,17 @@ const router = express.Router();
 router.use(authMiddleware, adminMiddleware);
 
 // Get all bookings
-router.get('/bookings', async (req, res) => {
+router.get('/bookings', async (req, res, next) => {
   try {
     const bookings = await Booking.getAll();
     res.json(bookings);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 });
 
 // Update booking status
-router.patch('/bookings/:id/status', async (req, res) => {
+router.patch('/bookings/:id/status', async (req, res, next) => {
   const { id } = req.params;
   const { status } = req.body;
   
@@ -55,17 +55,18 @@ router.patch('/bookings/:id/status', async (req, res) => {
 
     res.json(booking);
   } catch (err) {
-    console.error(`[Admin] Failed to update booking ${id}:`, err.message);
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 });
 
 // Get analytics
-router.get('/analytics', async (req, res) => {
+router.get('/analytics', async (req, res, next) => {
   try {
     const allBookings = await Booking.getAll();
     const totalBookings = allBookings.length;
-    const totalRevenue = allBookings.reduce((sum, b) => sum + parseFloat(b.price || 0), 0);
+    const totalRevenue = allBookings
+      .filter(b => b.status === 'confirmed')
+      .reduce((sum, b) => sum + parseFloat(b.service_price || 0), 0);
     const confirmedBookings = allBookings.filter(b => b.status === 'confirmed').length;
 
     res.json({
@@ -75,7 +76,7 @@ router.get('/analytics', async (req, res) => {
       pendingBookings: allBookings.filter(b => b.status === 'pending').length,
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 });
 

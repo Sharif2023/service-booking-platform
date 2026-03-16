@@ -8,6 +8,7 @@ export default function AdminServicesPage() {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [editingService, setEditingService] = useState(null);
   const [form, setForm] = useState({
     name: '',
     description: '',
@@ -39,18 +40,47 @@ export default function AdminServicesPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await servicesAPI.create({
-        ...form,
-        price: parseFloat(form.price),
-        duration_minutes: parseInt(form.duration_minutes),
-      });
-      addNotification('Service created successfully', 'success');
+      if (editingService) {
+        await servicesAPI.update(editingService.id, {
+          ...form,
+          price: parseFloat(form.price),
+          duration_minutes: parseInt(form.duration_minutes),
+        });
+        addNotification('Service updated successfully', 'success');
+      } else {
+        await servicesAPI.create({
+          ...form,
+          price: parseFloat(form.price),
+          duration_minutes: parseInt(form.duration_minutes),
+        });
+        addNotification('Service created successfully', 'success');
+      }
       setForm({ name: '', description: '', price: '', duration_minutes: '', image_url: '' });
       setShowForm(false);
+      setEditingService(null);
       fetchServices();
     } catch (error) {
-      addNotification('Failed to create service', 'error');
+      addNotification(`Failed to ${editingService ? 'update' : 'create'} service`, 'error');
     }
+  };
+
+  const handleEditClick = (service) => {
+    setEditingService(service);
+    setForm({
+      name: service.name,
+      description: service.description,
+      price: service.price.toString(),
+      duration_minutes: service.duration_minutes?.toString() || '',
+      image_url: service.image_url || '',
+    });
+    setShowForm(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleCancelForm = () => {
+    setShowForm(false);
+    setEditingService(null);
+    setForm({ name: '', description: '', price: '', duration_minutes: '', image_url: '' });
   };
 
   const handleDelete = async (serviceId) => {
@@ -74,10 +104,10 @@ export default function AdminServicesPage() {
            <p className="text-gray-400">Manage {services.length} active offerings in the marketplace</p>
         </div>
         <button
-          onClick={() => setShowForm(!showForm)}
+          onClick={showForm ? handleCancelForm : () => setShowForm(true)}
           className={`btn-primary shadow-[0_0_20px_rgba(79,142,247,0.3)] ${showForm ? '!bg-gradient-to-r !from-gray-600 !to-gray-700 !shadow-none' : ''}`}
         >
-          {showForm ? 'Cancel Creation' : '➕ Add New Service'}
+          {showForm ? 'Cancel' : '➕ Add New Service'}
         </button>
       </div>
 
@@ -87,7 +117,7 @@ export default function AdminServicesPage() {
           <form onSubmit={handleSubmit} className="glass-card p-8 border border-blue-500/30">
             <h3 className="text-xl font-bold mb-6 font-['Outfit'] flex items-center gap-2 text-blue-400">
                <span className="p-1.5 bg-blue-500/20 rounded text-blue-300 border border-blue-500/30 text-sm"><Sparkles className="w-4 h-4 text-blue-300" /></span>
-               Create New Offering
+               {editingService ? `Edit Service: ${editingService.name}` : 'Create New Offering'}
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -165,12 +195,12 @@ export default function AdminServicesPage() {
             </div>
 
             <div className="flex justify-end pt-4 border-t border-white/10">
-               <button
-                 type="submit"
-                 className="btn-success shadow-[0_0_20px_rgba(34,197,94,0.3)] bg-green-500/20 text-green-400 hover:bg-green-500/30 px-8 py-3 w-full md:w-auto"
-               >
-                 Publish Service Catalog
-               </button>
+                <button
+                  type="submit"
+                  className="btn-success shadow-[0_0_20px_rgba(34,197,94,0.3)] bg-green-500/20 text-green-400 hover:bg-green-500/30 px-8 py-3 w-full md:w-auto font-bold uppercase tracking-wider"
+                >
+                  {editingService ? 'Save Changes' : 'Publish Service Catalog'}
+                </button>
             </div>
           </form>
         </div>
@@ -191,12 +221,19 @@ export default function AdminServicesPage() {
                  </div>
               )}
               
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-sm z-20">
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center backdrop-blur-sm z-20 gap-4">
+                 <button
+                   onClick={() => handleEditClick(service)}
+                   className="btn-primary flex items-center gap-2 px-6 py-3 shadow-xl transform translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300"
+                 >
+                   <Settings className="w-5 h-5" />
+                   <span className="text-xs font-bold tracking-wider uppercase">Edit Service</span>
+                 </button>
                  <button
                    onClick={() => handleDelete(service.id)}
-                   className="btn-danger flex flex-col items-center gap-2 transform translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 px-6 py-4 shadow-xl border-red-500/40 bg-red-900/80 hover:bg-red-800"
+                   className="bg-red-500/20 text-red-400 hover:bg-red-500/40 border border-red-500/30 rounded-lg flex items-center gap-2 px-6 py-3 shadow-xl transform translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 delay-75"
                  >
-                   <Trash2 className="w-6 h-6 mb-1" />
+                   <Trash2 className="w-5 h-5" />
                    <span className="text-xs font-bold tracking-wider uppercase">Delete Item</span>
                  </button>
               </div>

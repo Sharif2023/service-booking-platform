@@ -19,6 +19,7 @@ import VerifyEmailPage from './pages/auth/VerifyEmailPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminBookingsPage from './pages/admin/AdminBookingsPage';
 import AdminServicesPage from './pages/admin/AdminServicesPage';
+import ProfilePage from './pages/ProfilePage';
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
                 <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
                 <Route path="/admin/bookings" element={<AdminRoute><AdminBookingsPage /></AdminRoute>} />
                 <Route path="/admin/services" element={<AdminRoute><AdminServicesPage /></AdminRoute>} />
+                <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
 
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>

@@ -6,25 +6,27 @@ const { authMiddleware, adminMiddleware } = require('../middleware/auth');
 const router = express.Router();
 
 // Get all services
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   try {
     const services = await Service.getAll();
     res.json(services);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 });
 
 // Get single service
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
   try {
     const service = await Service.getById(req.params.id);
     if (!service) {
-      return res.status(404).json({ error: 'Service not found' });
+      const error = new Error('Service not found');
+      error.statusCode = 404;
+      throw error;
     }
     res.json(service);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 });
 
@@ -32,7 +34,7 @@ router.get('/:id', async (req, res) => {
 router.post('/', authMiddleware, adminMiddleware, [
   body('name').notEmpty(),
   body('price').isFloat({ min: 0 }),
-], async (req, res) => {
+], async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -43,28 +45,28 @@ router.post('/', authMiddleware, adminMiddleware, [
     const service = await Service.create(name, description, price, duration_minutes, category, image_url);
     res.status(201).json(service);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 });
 
 // Update service (admin only)
-router.put('/:id', authMiddleware, adminMiddleware, async (req, res) => {
+router.put('/:id', authMiddleware, adminMiddleware, async (req, res, next) => {
   try {
     const { name, description, price, duration_minutes, category, image_url } = req.body;
     const service = await Service.update(req.params.id, name, description, price, duration_minutes, category, image_url);
     res.json(service);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 });
 
 // Delete service (admin only)
-router.delete('/:id', authMiddleware, adminMiddleware, async (req, res) => {
+router.delete('/:id', authMiddleware, adminMiddleware, async (req, res, next) => {
   try {
     await Service.delete(req.params.id);
     res.json({ message: 'Service deleted' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 });
 

@@ -1,6 +1,6 @@
-# Service Booking Platform - Complete Implementation
+# ServiceHub - Premium Service Booking Platform
 
-A professional service booking platform with React + Vite frontend, Express backend, PostgreSQL database, Stripe payments, and email notifications.
+An ultra-modern, enterprise-grade service booking platform built with the **PERN + Stripe** stack (PostgreSQL, Express, React, Node.js). Engineered for performance, elegance, and business precision.
 
 ## 🎯 Features
 

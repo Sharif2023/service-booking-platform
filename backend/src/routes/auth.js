@@ -13,7 +13,7 @@ router.post('/register', [
   body('email').isEmail().normalizeEmail(),
   body('password').isLength({ min: 6 }),
   body('full_name').notEmpty(),
-], async (req, res) => {
+], async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -51,7 +51,7 @@ router.post('/register', [
       user: { id: user.id, email: user.email, full_name: user.full_name, is_verified: false }
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 });
 
@@ -59,7 +59,7 @@ router.post('/register', [
 router.post('/login', [
   body('email').isEmail(),
   body('password').notEmpty(),
-], async (req, res) => {
+], async (req, res, next) => {
   try {
     const { email, password } = req.body;
     console.log(`[Auth] Login attempt for: ${email}`);
@@ -68,8 +68,9 @@ router.post('/login', [
     console.log(`[Auth] User found: ${user ? 'Yes' : 'No'}`);
 
     if (!user) {
-      console.log(`[Auth] Login failed: User not found`);
-      return res.status(401).json({ error: 'Invalid email or password' });
+      const error = new Error('Invalid email or password');
+      error.statusCode = 401;
+      throw error;
     }
 
     try {
@@ -77,12 +78,13 @@ router.post('/login', [
       console.log(`[Auth] Password valid: ${isValidPassword}`);
       
       if (!isValidPassword) {
-        console.log(`[Auth] Login failed: Invalid password`);
-        return res.status(401).json({ error: 'Invalid email or password' });
+        const error = new Error('Invalid email or password');
+        error.statusCode = 401;
+        throw error;
       }
     } catch (passwordErr) {
-      console.error(`[Auth] Password verification error:`, passwordErr.message);
-      return res.status(500).json({ error: 'Authentication internal error' });
+      next(passwordErr);
+      return;
     }
 
     if (!user.is_verified) {
@@ -93,22 +95,15 @@ router.post('/login', [
       });
     }
 
-    try {
-      const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
-      console.log(`[Auth] Token generated for user: ${user.id}`);
-      res.json({ user: { id: user.id, email: user.email, full_name: user.full_name, phone: user.phone, role: user.role, is_verified: user.is_verified }, token });
-    } catch (jwtErr) {
-      console.error(`[Auth] JWT signing error:`, jwtErr.message);
-      return res.status(500).json({ error: 'Token generation failed' });
-    }
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
+    res.json({ user: { id: user.id, email: user.email, full_name: user.full_name, phone: user.phone, role: user.role, is_verified: user.is_verified }, token });
   } catch (err) {
-    console.error(`[Auth] Global login error:`, err.message);
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 });
 
 // Verify Email
-router.get('/verify/:token', async (req, res) => {
+router.get('/verify/:token', async (req, res, next) => {
   try {
     const { token } = req.params;
     console.log(`[Auth] Verifying token: ${token}`);
@@ -121,7 +116,47 @@ router.get('/verify/:token', async (req, res) => {
     await User.verifyEmail(user.id);
     res.json({ message: 'Email verified successfully. You can now log in.' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
+  }
+});
+
+const { authMiddleware } = require('../middleware/auth');
+
+// Update profile
+router.put('/profile', authMiddleware, async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const { full_name, phone, gender, dob, current_password, new_password } = req.body;
+
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // If password change requested
+    if (new_password) {
+      if (!current_password) {
+        return res.status(400).json({ error: 'Current password required to set new password' });
+      }
+      
+      const dbUser = await User.findByEmail(user.email); // Need full record with password_hash
+      const isValid = await User.verifyPassword(current_password, dbUser.password_hash);
+      if (!isValid) {
+        return res.status(401).json({ error: 'Incorrect current password' });
+      }
+    }
+
+    const updatedUser = await User.update(id, {
+      full_name: full_name || user.full_name,
+      phone: phone || user.phone,
+      password: new_password,
+      gender: gender !== undefined ? gender : user.gender,
+      dob: dob !== undefined ? dob : user.dob
+    });
+
+    res.json(updatedUser);
+  } catch (err) {
+    next(err);
   }
 });
 

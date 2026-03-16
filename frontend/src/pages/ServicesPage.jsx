@@ -44,8 +44,8 @@ export default function ServicesPage() {
         <h1 className="text-4xl md:text-5xl font-bold mb-4 font-['Outfit']">
           Our <span className="gradient-text">Premium Services</span>
         </h1>
-        <p className="text-gray-400 text-lg">
-          Select from our curated list of professional offerings, designed to elevate your standard of living.
+        <p className="text-gray-400 text-lg leading-relaxed max-w-xl mx-auto">
+          Explore our <span className="text-white font-medium">elite collection</span> of professional services, meticulously curated to provide the highest standard of excellence.
         </p>
       </div>
 
@@ -60,7 +60,7 @@ export default function ServicesPage() {
           {services.map((service, index) => (
             <div 
               key={service.id} 
-              className="glass-card flex flex-col h-full group overflow-hidden"
+              className="glass-card flex flex-col h-full group overflow-hidden hover:border-blue-500/30 hover:shadow-[0_20px_40px_rgba(59,130,246,0.15)] transition-all duration-500"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="relative h-56 overflow-hidden bg-[rgba(255,255,255,0.02)]">

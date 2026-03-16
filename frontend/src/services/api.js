@@ -6,21 +6,25 @@ const api = axios.create({
   baseURL: API_URL,
 });
 
-// Add token to requests
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+// Request interceptor
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-// Handle errors
+// Response interceptor
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
+      localStorage.removeItem('user');
       window.location.href = '/login';
     }
     return Promise.reject(error);
@@ -30,8 +34,8 @@ api.interceptors.response.use(
 export const authAPI = {
   register: (email, password, full_name, phone) =>
     api.post('/auth/register', { email, password, full_name, phone }),
-  login: (email, password) =>
-    api.post('/auth/login', { email, password }),
+  login: (email, password) => api.post('/auth/login', { email, password }),
+  updateProfile: (data) => api.put('/auth/profile', data),
 };
 
 export const servicesAPI = {

@@ -50,20 +50,10 @@ app.get('/', (req, res) => {
   res.json({ message: 'Booking API running', status: 'OK' });
 });
 
+const errorHandler = require('./src/middleware/errorHandler');
+
 // Error handling middleware
-app.use((err, req, res, next) => {
-  console.error('!!! UNCAUGHT ERROR !!!');
-  console.error('Path:', req.path);
-  console.error('Method:', req.method);
-  console.error('Message:', err.message);
-  console.error('Stack:', err.stack);
-  
-  res.status(500).json({
-    error: 'Internal Server Error',
-    message: err.message,
-    path: req.path
-  });
-});
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 

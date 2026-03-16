@@ -8,6 +8,8 @@ CREATE TABLE IF NOT EXISTS users (
   role VARCHAR(50) DEFAULT 'user',
   is_verified BOOLEAN DEFAULT FALSE,
   verification_token VARCHAR(255),
+  gender VARCHAR(20),
+  dob DATE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

@@ -14,7 +14,7 @@ router.post('/create-session', authMiddleware, [
   body('service_id').notEmpty(),
   body('booking_date').notEmpty(),
   body('booking_time').notEmpty(),
-], async (req, res) => {
+], async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -118,31 +118,17 @@ router.post('/create-session', authMiddleware, [
     await Booking.updateStripeSession(booking.id, session.id, null);
     console.log('[CreateSession] Booking updated with Stripe session ID');
 
-    res.json({ 
+    res.status(201).json({ 
       sessionId: session.id, 
       clientSecret: session.client_secret
     });
   } catch (err) {
-    console.error('!!! Create Session Exception !!!');
-    console.error('Error Name:', err.name);
-    console.error('Error Message:', err.message);
-    if (err.stack) console.error('Error Stack:', err.stack);
-    
-    // Explicitly handle Stripe errors
-    if (err.type === 'StripeInvalidRequestError') {
-      console.error('[StripeError] Invalid Request:', err.raw?.message || err.message);
-    }
-    
-    res.status(500).json({ 
-      error: 'Failed to initialize secure checkout session',
-      details: err.message,
-      type: err.type || 'InternalError'
-    });
+    next(err);
   }
 });
 
 // Check payment status of a Stripe session
-router.get('/session-status/:sessionId', authMiddleware, async (req, res) => {
+router.get('/session-status/:sessionId', authMiddleware, async (req, res, next) => {
   try {
     const session = await stripe.checkout.sessions.retrieve(req.params.sessionId);
     const booking = await Booking.getByStripeSessionId(req.params.sessionId);
@@ -194,27 +180,29 @@ router.get('/session-status/:sessionId', authMiddleware, async (req, res) => {
       }
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err); // Use next(err)
   }
 });
 
 // Get user's bookings
-router.get('/', authMiddleware, async (req, res) => {
+router.get('/', authMiddleware, async (req, res, next) => { // Added 'next'
   try {
     const bookings = await Booking.getByUserId(req.user.id);
     res.json(bookings);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err); // Use next(err)
   }
 });
 
 // Cancel booking
-router.patch('/:id/cancel', authMiddleware, async (req, res) => {
+router.patch('/:id/cancel', authMiddleware, async (req, res, next) => { // Added 'next'
   try {
     const booking = await Booking.getById(req.params.id);
 
     if (!booking || booking.user_id !== req.user.id) {
-      return res.status(403).json({ error: 'Unauthorized' });
+      const error = new Error('Unauthorized');
+      error.statusCode = 403;
+      throw error;
     }
 
     if (booking.status === 'confirmed' || booking.status === 'pending') {
@@ -224,7 +212,7 @@ router.patch('/:id/cancel', authMiddleware, async (req, res) => {
       res.status(400).json({ error: 'Cannot cancel this booking' });
     }
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 });
 
