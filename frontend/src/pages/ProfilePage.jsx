@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useNotification } from '../hooks/useNotification';
 import { authAPI } from '../services/api';
-import { User, Phone, Mail, Lock, Shield, Save, Key, Settings } from 'lucide-react';
+import { User, Phone, Mail, Lock, Shield, Save, Key, Settings, Calendar } from 'lucide-react';
 import LoadingSpinner from '../components/shared/LoadingSpinner';
 
 export default function ProfilePage() {
