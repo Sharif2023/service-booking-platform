@@ -48,7 +48,7 @@ router.post('/register', [
 
     res.status(201).json({ 
       message: 'Registration successful. Please check your email to verify your account.',
-      user: { id: user.id, email: user.email, full_name: user.full_name, is_verified: false }
+      user: { id: user.id, email: user.email, full_name: user.full_name, is_verified: false, gender: user.gender, dob: user.dob }
     });
   } catch (err) {
     next(err);
@@ -96,7 +96,7 @@ router.post('/login', [
     }
 
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
-    res.json({ user: { id: user.id, email: user.email, full_name: user.full_name, phone: user.phone, role: user.role, is_verified: user.is_verified }, token });
+    res.json({ user: { id: user.id, email: user.email, full_name: user.full_name, phone: user.phone, role: user.role, is_verified: user.is_verified, gender: user.gender, dob: user.dob }, token });
   } catch (err) {
     next(err);
   }
