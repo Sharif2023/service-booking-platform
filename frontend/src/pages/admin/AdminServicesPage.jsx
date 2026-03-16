@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { servicesAPI } from '../../services/api';
 import { useNotification } from '../../hooks/useNotification';
 import LoadingSpinner from '../../components/shared/LoadingSpinner';
-import { Sparkles, Link as LinkIcon, Package, Trash2 } from 'lucide-react';
+import { Sparkles, Link as LinkIcon, Package, Trash2, Settings } from 'lucide-react';
 
 export default function AdminServicesPage() {
   const [services, setServices] = useState([]);
@@ -69,7 +69,7 @@ export default function AdminServicesPage() {
     setForm({
       name: service.name,
       description: service.description,
-      price: service.price.toString(),
+      price: service.price?.toString() || '',
       duration_minutes: service.duration_minutes?.toString() || '',
       image_url: service.image_url || '',
     });

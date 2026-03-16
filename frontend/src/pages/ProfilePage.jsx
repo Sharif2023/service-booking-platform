@@ -26,7 +26,13 @@ export default function ProfilePage() {
         full_name: user.full_name || '',
         phone: user.phone || '',
         gender: user.gender || '',
-        dob: user.dob ? new Date(user.dob).toISOString().split('T')[0] : '',
+        dob: user.dob ? (function() {
+          try {
+            return new Date(user.dob).toISOString().split('T')[0];
+          } catch (e) {
+            return '';
+          }
+        })() : '',
       }));
     }
   }, [user]);
