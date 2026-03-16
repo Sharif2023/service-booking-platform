@@ -108,7 +108,10 @@ export default function BookingSuccessPage() {
           
           <div className="bg-black/20 border border-white/5 rounded-xl p-4 mb-10 text-sm text-gray-400 flex items-start text-left gap-4">
              <Mail className="w-6 h-6 text-blue-400 flex-shrink-0 mt-0.5" />
-             <p>A detailed confirmation and receipt has been sent to your registered email address along with instructions.</p>
+             <div>
+                <p className="mb-2">A detailed confirmation and receipt has been sent to your registered email address along with instructions.</p>
+                <p className="text-blue-300 font-medium">Your service provider will also connect with you shortly via your providing email.</p>
+             </div>
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
